@@ -1,7 +1,7 @@
-@use "primeng/resources/themes/lara-dark-blue/theme.css";
-@use "primeng/resources/primeng.css";
-@use "primeicons/primeicons.css";
-@use "primeflex/primeflex.css";
+@import "primeng/resources/themes/lara-dark-blue/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+@import "primeflex/primeflex.css";
 
 * {
   margin: 0;
@@ -13,4 +13,11 @@ body {
   font-family: var(--font-family);
   background-color: var(--surface-ground);
   color: var(--text-color);
+}
+.p-datatable .p-datatable-thead > tr > th {
+  padding: 1rem 1rem;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  padding: 0.45rem 1rem;
 }

@@ -1,1 +1,130 @@
-<p>clientes works!</p>
+<div class="clientes-page">
+
+  <p-toast />
+  <p-confirmDialog />
+
+  <div class="page-header">
+    <div>
+      <h2>Clientes</h2>
+      <p>Gerencie os clientes da oficina</p>
+    </div>
+    <p-button
+      label="Novo Cliente"
+      icon="pi pi-plus"
+      (onClick)="abrirNovo()"
+    />
+  </div>
+
+ <div class="search-bar">
+  <input
+    pInputText
+    type="text"
+    [(ngModel)]="busca"
+    placeholder="Buscar por nome, email"
+  />
+</div>
+
+  <p-table
+    [value]="clientesFiltrados"
+    [loading]="carregando"
+    [paginator]="true"
+    [rows]="10"
+    styleClass="p-datatable-striped"
+    [rowHover]="true"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Telefone</th>
+        <th>CPF</th>
+        <th style="width: 120px">Ações</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-cliente>
+      <tr>
+        <td>{{ cliente.nome }}</td>
+        <td>{{ cliente.email }}</td>
+        <td>{{ cliente.telefone }}</td>
+        <td>{{ cliente.cpf }}</td>
+        <td>
+          <div class="acoes">
+            <p-button
+              icon="pi pi-pencil"
+              [rounded]="true"
+              [text]="true"
+              severity="info"
+              (onClick)="abrirEdicao(cliente)"
+            />
+            <p-button
+              icon="pi pi-trash"
+              [rounded]="true"
+              [text]="true"
+              severity="danger"
+              (onClick)="confirmarDelete(cliente)"
+            />
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5" class="text-center">Nenhum cliente encontrado.</td>
+      </tr>
+    </ng-template>
+
+  </p-table>
+
+  <!-- Dialog Cadastro/Edição -->
+  <p-dialog
+    [(visible)]="dialogVisivel"
+    [header]="editando ? 'Editar Cliente' : 'Novo Cliente'"
+    [modal]="true"
+    [style]="{ width: '480px' }"
+    [draggable]="false"
+  >
+
+    <div class="p-fluid form-grid">
+
+      <div class="field">
+        <label>Nome</label>
+        <input pInputText type="text" [(ngModel)]="clienteSelecionado.nome" />
+      </div>
+
+      <div class="field">
+        <label>Email</label>
+        <input pInputText type="email" [(ngModel)]="clienteSelecionado.email" />
+      </div>
+
+      <div class="field">
+        <label>Telefone</label>
+        <input pInputText type="text" [(ngModel)]="clienteSelecionado.telefone" />
+      </div>
+
+      <div class="field">
+        <label>CPF</label>
+        <input pInputText type="text" [(ngModel)]="clienteSelecionado.cpf" />
+      </div>
+
+    </div>
+
+    <ng-template pTemplate="footer">
+      <p-button
+        label="Cancelar"
+        icon="pi pi-times"
+        [text]="true"
+        severity="secondary"
+        (onClick)="dialogVisivel = false"
+      />
+      <p-button
+        [label]="editando ? 'Atualizar' : 'Salvar'"
+        icon="pi pi-check"
+        (onClick)="salvar()"
+      />
+    </ng-template>
+
+  </p-dialog>
+
+</div>

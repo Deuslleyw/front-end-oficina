@@ -1,1 +1,53 @@
-<p>login works!</p>
+<div class="login-container">
+  <p-card class="login-card">
+
+    <div class="login-header">
+      <i class="pi pi-wrench login-icon"></i>
+      <h1>Oficina</h1>
+      <p>Sistema de Gestão</p>
+    </div>
+
+    <div class="p-fluid">
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input
+          pInputText
+          id="email"
+          type="email"
+          [(ngModel)]="request.email"
+          placeholder="seu@email.com"
+        />
+      </div>
+
+      <div class="field">
+        <label for="senha">Senha</label>
+        <p-password
+          id="senha"
+          [(ngModel)]="request.senha"
+          placeholder="Sua senha"
+          [feedback]="false"
+          [toggleMask]="true"
+          styleClass="w-full"
+        />
+      </div>
+
+      <p-message
+        *ngIf="erro"
+        severity="error"
+        [text]="erro"
+        styleClass="w-full mb-3"
+      />
+
+      <p-button
+        label="Entrar"
+        icon="pi pi-sign-in"
+        styleClass="w-full"
+        [loading]="carregando"
+        (onClick)="login()"
+      />
+
+    </div>
+
+  </p-card>
+</div>

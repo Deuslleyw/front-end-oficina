@@ -1,0 +1,58 @@
+.veiculos-page {
+  padding: 0.5rem 0;
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-color);
+      margin: 0;
+    }
+
+    p {
+      color: var(--text-color-secondary);
+      margin: 0.25rem 0 0;
+    }
+  }
+
+  .search-bar {
+    margin-bottom: 1.5rem;
+
+    input {
+      width: 380px;
+      height: 42px;
+      padding: 0 1rem;
+    }
+  }
+
+  .acoes {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .field {
+    margin-bottom: 1.25rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 1rem;
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+  }
+}
