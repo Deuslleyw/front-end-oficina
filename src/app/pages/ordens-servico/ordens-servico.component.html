@@ -1,1 +1,294 @@
-<p>ordens-servico works!</p>
+<div class="ordens-page">
+
+  <p-toast />
+  <p-confirmDialog />
+
+  <div class="page-header">
+    <div>
+      <h2>Ordens de Serviço</h2>
+      <p>Gerencie as ordens de serviço da oficina</p>
+    </div>
+    <p-button
+      label="Nova Ordem"
+      icon="pi pi-plus"
+      (onClick)="abrirNovo()"
+    />
+  </div>
+
+  <div class="search-bar">
+    <input
+      pInputText
+      type="text"
+      [(ngModel)]="busca"
+      placeholder="Buscar por descrição, cliente, placa ou status..."
+    />
+  </div>
+
+  <p-table
+    [value]="ordensFiltradas"
+    [loading]="carregando"
+    [paginator]="true"
+    [rows]="10"
+    styleClass="p-datatable-striped"
+    [rowHover]="true"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 60px">#</th>
+        <th style="width: 200px">Descrição</th>
+        <th>Cliente</th>
+        <th>Veículo</th>
+        <th style="width: 120px">Valor</th>
+        <th style="width: 140px">Status</th>
+        <th style="width: 160px">Abertura</th>
+        <th style="width: 140px">Ações</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-ordem>
+      <tr>
+        <td>{{ ordem.id }}</td>
+        <td class="descricao-cell">{{ ordem.descricao }}</td>
+        <td>{{ ordem.cliente?.nome }}</td>
+        <td>{{ ordem.veiculo?.modelo }} — {{ ordem.veiculo?.placa }}</td>
+        <td>{{ ordem.valor | currency:'BRL' }}</td>
+        <td>
+          <p-tag
+            [value]="getStatusLabel(ordem.status)"
+            [severity]="getSeverity(ordem.status)"
+          />
+        </td>
+        <td>{{ ordem.dataAbertura | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>
+          <div class="acoes">
+            <p-button
+              icon="pi pi-eye"
+              [rounded]="true"
+              [text]="true"
+              severity="secondary"
+              pTooltip="Ver detalhes"
+              (onClick)="abrirDetalhes(ordem)"
+            />
+            <p-button
+              icon="pi pi-pencil"
+              [rounded]="true"
+              [text]="true"
+              severity="info"
+              pTooltip="Editar"
+              (onClick)="abrirEdicao(ordem)"
+              [disabled]="!podeEditar(ordem.status)"
+            />
+            <p-button
+              icon="pi pi-ban"
+              [rounded]="true"
+              [text]="true"
+              severity="danger"
+              pTooltip="Cancelar ordem"
+              (onClick)="confirmarCancelamento(ordem)"
+              [disabled]="!podeEditar(ordem.status)"
+            />
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8" class="text-center">Nenhuma ordem encontrada.</td>
+      </tr>
+    </ng-template>
+
+  </p-table>
+
+  <!-- Dialog Detalhes -->
+  <p-dialog
+  [(visible)]="dialogDetalhesVisivel"
+  header="Detalhes da Ordem"
+  [modal]="true"
+  [style]="{ width: '640px' }"
+  [draggable]="false"
+  [resizable]="false"
+  >
+    <div class="detalhes" *ngIf="ordemDetalhes">
+
+      <div class="detalhe-header">
+        <span class="ordem-id">#{{ ordemDetalhes.id }}</span>
+        <p-tag
+          [value]="getStatusLabel(ordemDetalhes.status)"
+          [severity]="getSeverity(ordemDetalhes.status)"
+        />
+      </div>
+
+      <p-divider />
+
+      <div class="detalhe-secao">
+        <h4>Descrição</h4>
+        <p>{{ ordemDetalhes.descricao }}</p>
+      </div>
+
+      <div class="detalhe-grid">
+        <div class="detalhe-item">
+          <span class="label">Valor</span>
+          <span class="valor">{{ ordemDetalhes.valor | currency:'BRL' }}</span>
+        </div>
+        <div class="detalhe-item">
+          <span class="label">Data de Abertura</span>
+          <span class="valor">{{ ordemDetalhes.dataAbertura | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <div class="detalhe-item" *ngIf="ordemDetalhes.dataFechamento">
+          <span class="label">Data de Fechamento</span>
+          <span class="valor">{{ ordemDetalhes.dataFechamento | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+      </div>
+
+      <p-divider />
+
+      <div class="detalhe-secao">
+        <h4><i class="pi pi-user"></i> Cliente</h4>
+        <div class="detalhe-grid">
+          <div class="detalhe-item">
+            <span class="label">Nome</span>
+            <span class="valor">{{ ordemDetalhes.cliente?.nome }}</span>
+          </div>
+          <div class="detalhe-item">
+            <span class="label">Email</span>
+            <span class="valor">{{ ordemDetalhes.cliente?.email }}</span>
+          </div>
+          <div class="detalhe-item">
+            <span class="label">Telefone</span>
+            <span class="valor">{{ ordemDetalhes.cliente?.telefone }}</span>
+          </div>
+        </div>
+      </div>
+
+      <p-divider />
+
+      <div class="detalhe-secao">
+        <h4><i class="pi pi-car"></i> Veículo</h4>
+        <div class="detalhe-grid">
+          <div class="detalhe-item">
+            <span class="label">Modelo</span>
+            <span class="valor">{{ ordemDetalhes.veiculo?.modelo }}</span>
+          </div>
+          <div class="detalhe-item">
+            <span class="label">Marca</span>
+            <span class="valor">{{ ordemDetalhes.veiculo?.marca }}</span>
+          </div>
+          <div class="detalhe-item">
+            <span class="label">Placa</span>
+            <span class="valor">{{ ordemDetalhes.veiculo?.placa }}</span>
+          </div>
+          <div class="detalhe-item">
+            <span class="label">Ano</span>
+            <span class="valor">{{ ordemDetalhes.veiculo?.ano }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <ng-template pTemplate="footer">
+      <p-button
+        label="Fechar"
+        icon="pi pi-times"
+        [text]="true"
+        severity="secondary"
+        (onClick)="dialogDetalhesVisivel = false"
+      />
+      <p-button
+        *ngIf="ordemDetalhes && podeEditar(ordemDetalhes.status)"
+        label="Editar"
+        icon="pi pi-pencil"
+        severity="info"
+        (onClick)="dialogDetalhesVisivel = false; abrirEdicao(ordemDetalhes!)"
+      />
+    </ng-template>
+
+  </p-dialog>
+
+  <!-- Dialog Cadastro/Edição -->
+  <p-dialog
+    [(visible)]="dialogFormVisivel"
+    [header]="editando ? 'Editar Ordem' : 'Nova Ordem'"
+    [modal]="true"
+    [style]="{ width: '520px' }"
+    [draggable]="false"
+  >
+
+    <div class="p-fluid form-grid">
+
+      <div class="field full-width">
+        <label>Descrição</label>
+        <input pInputText type="text" [(ngModel)]="ordemSelecionada.descricao" />
+      </div>
+
+      <div class="field">
+        <label>Valor</label>
+        <p-inputNumber
+          [(ngModel)]="ordemSelecionada.valor"
+          mode="currency"
+          currency="BRL"
+          locale="pt-BR"
+          styleClass="w-full"
+        />
+      </div>
+
+      <div class="field">
+        <label>Status</label>
+        <p-dropdown
+          [options]="statusOptions"
+          [(ngModel)]="ordemSelecionada.status"
+          optionLabel="label"
+          optionValue="value"
+          styleClass="w-full"
+        />
+      </div>
+
+      <div class="field full-width">
+        <label>Cliente</label>
+        <p-dropdown
+          [options]="clientes"
+          [(ngModel)]="ordemSelecionada.clienteId"
+          optionLabel="nome"
+          optionValue="id"
+          placeholder="Selecione o cliente"
+          [filter]="true"
+          filterPlaceholder="Buscar cliente..."
+          styleClass="w-full"
+          (onChange)="onClienteChange()"
+        />
+      </div>
+
+      <div class="field full-width">
+        <label>Veículo</label>
+        <p-dropdown
+          [options]="veiculosDoCliente"
+          [(ngModel)]="ordemSelecionada.veiculoId"
+          optionLabel="modelo"
+          optionValue="id"
+          placeholder="Selecione o veículo"
+          styleClass="w-full"
+          [disabled]="!ordemSelecionada.clienteId"
+        />
+      </div>
+
+    </div>
+
+    <ng-template pTemplate="footer">
+      <p-button
+        label="Cancelar"
+        icon="pi pi-times"
+        [text]="true"
+        severity="secondary"
+        (onClick)="dialogFormVisivel = false"
+      />
+      <p-button
+        [label]="editando ? 'Atualizar' : 'Salvar'"
+        icon="pi pi-check"
+        (onClick)="salvar()"
+      />
+    </ng-template>
+
+  </p-dialog>
+
+</div>

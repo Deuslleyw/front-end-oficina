@@ -1,0 +1,137 @@
+.ordens-page {
+  padding: 0.5rem 0;
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-color);
+      margin: 0;
+    }
+
+    p {
+      color: var(--text-color-secondary);
+      margin: 0.25rem 0 0;
+    }
+  }
+
+  .search-bar {
+    margin-bottom: 1.5rem;
+
+    input {
+      width: 380px;
+      height: 42px;
+      padding: 0 1rem;
+    }
+  }
+
+  .descricao-cell {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .acoes {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .field {
+    margin-bottom: 1.25rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 1rem;
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+  }
+
+  // Dialog detalhes
+ .detalhes {
+    padding: 0.5rem 0;
+
+    .detalhe-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+
+      .ordem-id {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-color);
+      }
+    }
+
+    .detalhe-secao {
+      margin-bottom: 1.25rem;
+
+      h4 {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-color-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin: 0 0 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      p {
+        color: var(--text-color);
+        line-height: 1.7;
+        margin: 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+        background: var(--surface-ground);
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        border: 1px solid var(--surface-border);
+      }
+    }
+
+    .detalhe-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .detalhe-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+
+      .label {
+        font-size: 0.72rem;
+        color: var(--text-color-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .valor {
+        font-size: 0.95rem;
+        color: var(--text-color);
+        font-weight: 500;
+        word-break: break-word;
+      }
+    }
+  }
+}
