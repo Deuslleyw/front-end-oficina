@@ -8,11 +8,7 @@
       <h2>Ordens de Serviço</h2>
       <p>Gerencie as ordens de serviço da oficina</p>
     </div>
-    <p-button
-      label="Nova Ordem"
-      icon="pi pi-plus"
-      (onClick)="abrirNovo()"
-    />
+    <p-button label="Nova Ordem" icon="pi pi-plus" (onClick)="abrirNovo()" />
   </div>
 
   <div class="search-bar">
@@ -35,20 +31,35 @@
     <ng-template pTemplate="header">
       <tr>
         <th style="width: 60px">#</th>
-        <th style="width: 200px">Descrição</th>
+        <th style="width: 90px; white-space: nowrap">Ver OS</th>        <!--Teste da quebra de linha na coluna-->
+        <!-- <th style="width: 80px">Ver OS</th> -->
         <th>Cliente</th>
         <th>Veículo</th>
-        <th style="width: 120px">Valor</th>
+        <th style="width: 130px">Valor</th>
+        <th style="width: 150px">Status</th>
+        <th style="width: 170px">Data</th>
+        <th style="width: 120px">Ações</th>
+                                                              <!--Teste espaçamento vertical das colunas-->
+        <!-- <th style="width: 120px">Valor</th>
         <th style="width: 140px">Status</th>
-        <th style="width: 160px">Abertura</th>
-        <th style="width: 140px">Ações</th>
+        <th style="width: 160px">Data</th>
+        <th style="width: 100px">Ações</th> -->
       </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-ordem>
       <tr>
         <td>{{ ordem.id }}</td>
-        <td class="descricao-cell">{{ ordem.descricao }}</td>
+        <td>
+          <p-button
+            icon="pi pi-eye"
+            [rounded]="true"
+            [text]="true"
+            severity="secondary"
+            pTooltip="Ver detalhes"
+            (onClick)="abrirDetalhes(ordem)"
+          />
+        </td>
         <td>{{ ordem.cliente?.nome }}</td>
         <td>{{ ordem.veiculo?.modelo }} — {{ ordem.veiculo?.placa }}</td>
         <td>{{ ordem.valor | currency:'BRL' }}</td>
@@ -61,14 +72,6 @@
         <td>{{ ordem.dataAbertura | date:'dd/MM/yyyy HH:mm' }}</td>
         <td>
           <div class="acoes">
-            <p-button
-              icon="pi pi-eye"
-              [rounded]="true"
-              [text]="true"
-              severity="secondary"
-              pTooltip="Ver detalhes"
-              (onClick)="abrirDetalhes(ordem)"
-            />
             <p-button
               icon="pi pi-pencil"
               [rounded]="true"
@@ -102,85 +105,81 @@
 
   <!-- Dialog Detalhes -->
   <p-dialog
-  [(visible)]="dialogDetalhesVisivel"
-  header="Detalhes da Ordem"
-  [modal]="true"
-  [style]="{ width: '640px' }"
-  [draggable]="false"
-  [resizable]="false"
+    [(visible)]="dialogDetalhesVisivel"
+    header="Detalhes da Ordem"
+    [modal]="true"
+    [style]="{ width: '640px' }"
+    [draggable]="false"
+    [resizable]="false"
   >
     <div class="detalhes" *ngIf="ordemDetalhes">
 
       <div class="detalhe-header">
-        <span class="ordem-id">#{{ ordemDetalhes.id }}</span>
+        <span class="ordem-id">Nº {{ ordemDetalhes.id }}</span>
         <p-tag
           [value]="getStatusLabel(ordemDetalhes.status)"
           [severity]="getSeverity(ordemDetalhes.status)"
         />
       </div>
 
-      <p-divider />
-
       <div class="detalhe-secao">
-        <h4>Descrição</h4>
-        <p>{{ ordemDetalhes.descricao }}</p>
-      </div>
-
-      <div class="detalhe-grid">
-        <div class="detalhe-item">
-          <span class="label">Valor</span>
-          <span class="valor">{{ ordemDetalhes.valor | currency:'BRL' }}</span>
-        </div>
-        <div class="detalhe-item">
-          <span class="label">Data de Abertura</span>
-          <span class="valor">{{ ordemDetalhes.dataAbertura | date:'dd/MM/yyyy HH:mm' }}</span>
-        </div>
-        <div class="detalhe-item" *ngIf="ordemDetalhes.dataFechamento">
-          <span class="label">Data de Fechamento</span>
-          <span class="valor">{{ ordemDetalhes.dataFechamento | date:'dd/MM/yyyy HH:mm' }}</span>
+        <span class="secao-label">DESCRIÇÃO</span>
+        <div class="campo-box">
+          <span>{{ ordemDetalhes.descricao }}</span>
         </div>
       </div>
 
-      <p-divider />
+      <div class="detalhe-row">
+        <div class="campo-box">
+          <span class="campo-label">VALOR</span>
+          <span class="campo-valor">{{ ordemDetalhes.valor | currency:'BRL' }}</span>
+        </div>
+        <div class="campo-box">
+          <span class="campo-label">DATA DE ABERTURA</span>
+          <span class="campo-valor">{{ ordemDetalhes.dataAbertura | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+      </div>
 
       <div class="detalhe-secao">
-        <h4><i class="pi pi-user"></i> Cliente</h4>
-        <div class="detalhe-grid">
-          <div class="detalhe-item">
-            <span class="label">Nome</span>
-            <span class="valor">{{ ordemDetalhes.cliente?.nome }}</span>
+        <span class="secao-label"><i class="pi pi-user"></i> CLIENTE</span>
+        <div class="detalhe-row">
+          <div class="campo-box">
+            <span class="campo-label">NOME</span>
+            <span class="campo-valor">{{ ordemDetalhes.cliente?.nome }}</span>
           </div>
-          <div class="detalhe-item">
-            <span class="label">Email</span>
-            <span class="valor">{{ ordemDetalhes.cliente?.email }}</span>
+          <div class="campo-box">
+            <span class="campo-label">EMAIL</span>
+            <span class="campo-valor">{{ ordemDetalhes.cliente?.email }}</span>
           </div>
-          <div class="detalhe-item">
-            <span class="label">Telefone</span>
-            <span class="valor">{{ ordemDetalhes.cliente?.telefone }}</span>
+        </div>
+        <div class="detalhe-row">
+          <div class="campo-box half">
+            <span class="campo-label">TELEFONE</span>
+            <span class="campo-valor">{{ ordemDetalhes.cliente?.telefone }}</span>
           </div>
         </div>
       </div>
 
-      <p-divider />
-
       <div class="detalhe-secao">
-        <h4><i class="pi pi-car"></i> Veículo</h4>
-        <div class="detalhe-grid">
-          <div class="detalhe-item">
-            <span class="label">Modelo</span>
-            <span class="valor">{{ ordemDetalhes.veiculo?.modelo }}</span>
+        <span class="secao-label"><i class="pi pi-car"></i> VEÍCULO</span>
+        <div class="detalhe-row">
+          <div class="campo-box">
+            <span class="campo-label">MODELO</span>
+            <span class="campo-valor">{{ ordemDetalhes.veiculo?.modelo }}</span>
           </div>
-          <div class="detalhe-item">
-            <span class="label">Marca</span>
-            <span class="valor">{{ ordemDetalhes.veiculo?.marca }}</span>
+          <div class="campo-box">
+            <span class="campo-label">MARCA</span>
+            <span class="campo-valor">{{ ordemDetalhes.veiculo?.marca }}</span>
           </div>
-          <div class="detalhe-item">
-            <span class="label">Placa</span>
-            <span class="valor">{{ ordemDetalhes.veiculo?.placa }}</span>
+        </div>
+        <div class="detalhe-row">
+          <div class="campo-box">
+            <span class="campo-label">PLACA</span>
+            <span class="campo-valor">{{ ordemDetalhes.veiculo?.placa }}</span>
           </div>
-          <div class="detalhe-item">
-            <span class="label">Ano</span>
-            <span class="valor">{{ ordemDetalhes.veiculo?.ano }}</span>
+          <div class="campo-box">
+            <span class="campo-label">ANO</span>
+            <span class="campo-valor">{{ ordemDetalhes.veiculo?.ano }}</span>
           </div>
         </div>
       </div>
@@ -188,20 +187,21 @@
     </div>
 
     <ng-template pTemplate="footer">
-      <p-button
-        label="Fechar"
-        icon="pi pi-times"
-        [text]="true"
-        severity="secondary"
-        (onClick)="dialogDetalhesVisivel = false"
-      />
-      <p-button
-        *ngIf="ordemDetalhes && podeEditar(ordemDetalhes.status)"
-        label="Editar"
-        icon="pi pi-pencil"
-        severity="info"
-        (onClick)="dialogDetalhesVisivel = false; abrirEdicao(ordemDetalhes!)"
-      />
+      <div class="dialog-footer">
+        <p-button
+          label="Fechar"
+          icon="pi pi-times"
+          severity="secondary"
+          [outlined]="true"
+          (onClick)="dialogDetalhesVisivel = false"
+        />
+        <p-button
+          *ngIf="ordemDetalhes && podeEditar(ordemDetalhes.status)"
+          label="Editar Ordem"
+          icon="pi pi-pencil"
+          (onClick)="dialogDetalhesVisivel = false; abrirEdicao(ordemDetalhes!)"
+        />
+      </div>
     </ng-template>
 
   </p-dialog>
@@ -214,7 +214,6 @@
     [style]="{ width: '520px' }"
     [draggable]="false"
   >
-
     <div class="p-fluid form-grid">
 
       <div class="field full-width">
@@ -275,18 +274,20 @@
     </div>
 
     <ng-template pTemplate="footer">
-      <p-button
-        label="Cancelar"
-        icon="pi pi-times"
-        [text]="true"
-        severity="secondary"
-        (onClick)="dialogFormVisivel = false"
-      />
-      <p-button
-        [label]="editando ? 'Atualizar' : 'Salvar'"
-        icon="pi pi-check"
-        (onClick)="salvar()"
-      />
+      <div class="dialog-footer">
+        <p-button
+          label="Cancelar"
+          icon="pi pi-times"
+          severity="secondary"
+          [outlined]="true"
+          (onClick)="dialogFormVisivel = false"
+        />
+        <p-button
+          [label]="editando ? 'Atualizar' : 'Salvar'"
+          icon="pi pi-check"
+          (onClick)="salvar()"
+        />
+      </div>
     </ng-template>
 
   </p-dialog>
