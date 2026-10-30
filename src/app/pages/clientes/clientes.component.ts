@@ -130,6 +130,8 @@ export class ClientesComponent implements OnInit {
       message: `Deseja excluir o cliente ${cliente.nome}?`,
       header: 'Confirmação',
       icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sim',
+      rejectLabel: 'Não',
       accept: () => {
         this.clienteService.deletar(cliente.id!).subscribe({
           next: () => {

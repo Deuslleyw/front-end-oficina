@@ -187,6 +187,18 @@
 .acoes ::ng-deep .p-button {
   min-height: 2rem;
 }
+
+.dialog-actions {
+  padding: 0 1rem;
+  transform: translateY(-1rem);
+}
+
+.dialog-actions ::ng-deep .p-button {
+  min-height: 2.35rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
 @media (max-width: 640px) {
   .search-field {
     flex-basis: 100%;
@@ -202,5 +214,9 @@
   .dialog-actions ::ng-deep .p-button,
   .dialog-footer ::ng-deep .p-button {
     flex: 1;
+  }
+
+  .dialog-actions {
+    padding: 0;
   }
 }

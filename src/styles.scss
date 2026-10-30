@@ -24,5 +24,103 @@ body {
 .p-dialog .p-dialog-header .p-dialog-title {
   font-size: 1.1rem;
   font-weight: 600;
-  padding-left: 0.80rem;
+  padding-left: 0.8rem;
+}
+
+/* Dropdowns: painel legível, alinhado e confortável para seleção. */
+.comfortable-dropdown-panel {
+  min-width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--surface-border);
+  border-radius: 6px;
+  box-shadow: 0 0.8rem 2rem rgb(0 0 0 / 28%);
+}
+
+.comfortable-dropdown-panel .p-dropdown-filter-container {
+  padding: 0.55rem;
+  border-bottom: 1px solid var(--surface-border);
+  background: var(--surface-card);
+}
+
+.comfortable-dropdown-panel .p-dropdown-filter {
+  min-height: 2.45rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 5px;
+}
+
+.comfortable-dropdown-panel .p-dropdown-items {
+  gap: 0.15rem;
+  padding: 0.35rem;
+}
+
+.comfortable-dropdown-panel .p-dropdown-item {
+  min-height: 2.6rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 5px;
+  line-height: 1.35;
+  white-space: normal;
+}
+
+.comfortable-dropdown-panel
+  .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover {
+  background: var(--surface-hover);
+}
+
+@media (max-width: 640px) {
+  .comfortable-dropdown-panel {
+    max-width: calc(100vw - 2rem);
+  }
+}
+
+/* Confirmações: compactas, legíveis e consistentes em todas as páginas. */
+.p-dialog.p-confirm-dialog {
+  width: 370px;
+  max-width: calc(100vw - 2rem);
+  border-radius: 9px;
+}
+
+.p-dialog.p-confirm-dialog .p-dialog-header {
+  padding: 0.85rem 1.1rem;
+}
+
+.p-dialog.p-confirm-dialog .p-dialog-content {
+  gap: 0.75rem;
+  padding: 0.95rem 1.1rem 1rem;
+}
+
+.p-dialog.p-confirm-dialog .p-confirm-dialog-icon {
+  flex: 0 0 auto;
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.p-dialog.p-confirm-dialog .p-confirm-dialog-message {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.p-dialog.p-confirm-dialog .p-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding: 0 1.1rem 1rem;
+}
+
+.p-dialog.p-confirm-dialog .p-dialog-footer .p-button {
+  min-width: 4.25rem;
+  min-height: 2.2rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .p-dialog.p-confirm-dialog {
+    width: calc(100vw - 2rem);
+  }
+
+  .p-dialog.p-confirm-dialog .p-dialog-footer .p-button {
+    flex: 1;
+  }
 }

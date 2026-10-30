@@ -148,6 +148,8 @@ export class VeiculosComponent implements OnInit {
       message: `Deseja excluir o veículo ${veiculo.modelo} (${veiculo.placa})?`,
       header: 'Confirmação',
       icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sim',
+      rejectLabel: 'Não',
       accept: () => {
         this.veiculoService.deletar(veiculo.id!).subscribe({
           next: () => {
