@@ -1,118 +1,128 @@
-<div class="veiculos-page">
-
-  <p-toast />
-  <p-confirmDialog />
-
-  <div class="page-header">
+<section class="veiculos-page" aria-labelledby="veiculos-title">
+  <p-toast /><p-confirmDialog />
+  <header class="page-header">
     <div>
-      <h2>Veículos</h2>
-      <p>Gerencie os veículos da oficina</p>
+      <span class="page-eyebrow">Cadastros</span>
+      <h1 id="veiculos-title">Veículos</h1>
+      <p>Gerencie os veículos da oficina.</p>
     </div>
-    <p-button
-      label="Novo Veículo"
-      icon="pi pi-plus"
-      (onClick)="abrirNovo()"
-    />
+    <p-button label="Novo veículo" icon="pi pi-plus" (onClick)="abrirNovo()" />
+  </header>
+  <div class="page-toolbar">
+    <label class="search-field" for="busca-veiculos"
+      ><i class="pi pi-search" aria-hidden="true"></i
+      ><input
+        id="busca-veiculos"
+        pInputText
+        type="search"
+        [(ngModel)]="busca"
+        placeholder="Buscar por marca, modelo, placa ou cliente"
+        aria-label="Buscar veículos" /></label
+    ><span class="result-count" aria-live="polite"
+      >{{ veiculosFiltrados.length }}
+      {{ veiculosFiltrados.length === 1 ? "veículo" : "veículos" }}</span
+    >
   </div>
-
-  <div class="search-bar">
-    <input
-      pInputText
-      type="text"
-      [(ngModel)]="busca"
-      placeholder="Buscar por marca, modelo, placa ou cliente..."
-    />
+  <div class="table-card">
+    <p-table
+      [value]="veiculosFiltrados"
+      [loading]="carregando"
+      [paginator]="true"
+      [rows]="10"
+      styleClass="p-datatable-striped"
+      [rowHover]="true"
+      responsiveLayout="scroll"
+      ><ng-template pTemplate="header"
+        ><tr>
+          <th scope="col">Marca</th>
+          <th scope="col">Modelo</th>
+          <th scope="col">Placa</th>
+          <th scope="col">Ano</th>
+          <th scope="col">Cliente</th>
+          <th scope="col" class="actions-column">Ações</th>
+        </tr></ng-template
+      ><ng-template pTemplate="body" let-veiculo
+        ><tr>
+          <td data-label="Marca">{{ veiculo.marca }}</td>
+          <td data-label="Modelo">{{ veiculo.modelo }}</td>
+          <td data-label="Placa">{{ veiculo.placa }}</td>
+          <td data-label="Ano">{{ veiculo.ano }}</td>
+          <td data-label="Cliente">{{ veiculo.clienteNome }}</td>
+          <td data-label="Ações">
+            <div class="acoes">
+              <p-button
+                icon="pi pi-pencil"
+                [rounded]="true"
+                [text]="true"
+                severity="info"
+                aria-label="Editar veículo"
+                (onClick)="abrirEdicao(veiculo)"
+              /><p-button
+                icon="pi pi-trash"
+                [rounded]="true"
+                [text]="true"
+                severity="danger"
+                aria-label="Excluir veículo"
+                (onClick)="confirmarDelete(veiculo)"
+              />
+            </div>
+          </td></tr></ng-template
+      ><ng-template pTemplate="emptymessage"
+        ><tr>
+          <td colspan="6" class="empty-state">Nenhum veículo encontrado.</td>
+        </tr></ng-template
+      ></p-table
+    >
   </div>
-
-  <p-table
-    [value]="veiculosFiltrados"
-    [loading]="carregando"
-    [paginator]="true"
-    [rows]="10"
-    styleClass="p-datatable-striped"
-    [rowHover]="true"
-  >
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Marca</th>
-        <th>Modelo</th>
-        <th>Placa</th>
-        <th>Ano</th>
-        <th>Cliente</th>
-        <th style="width: 120px">Ações</th>
-      </tr>
-    </ng-template>
-
-    <ng-template pTemplate="body" let-veiculo>
-      <tr>
-        <td>{{ veiculo.marca }}</td>
-        <td>{{ veiculo.modelo }}</td>
-        <td>{{ veiculo.placa }}</td>
-        <td>{{ veiculo.ano }}</td>
-        <td>{{ veiculo.clienteNome }}</td>
-        <td>
-          <div class="acoes">
-            <p-button
-              icon="pi pi-pencil"
-              [rounded]="true"
-              [text]="true"
-              severity="info"
-              (onClick)="abrirEdicao(veiculo)"
-            />
-            <p-button
-              icon="pi pi-trash"
-              [rounded]="true"
-              [text]="true"
-              severity="danger"
-              (onClick)="confirmarDelete(veiculo)"
-            />
-          </div>
-        </td>
-      </tr>
-    </ng-template>
-
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="6" class="text-center">Nenhum veículo encontrado.</td>
-      </tr>
-    </ng-template>
-
-  </p-table>
-
-  <!-- Dialog Cadastro/Edição -->
   <p-dialog
     [(visible)]="dialogVisivel"
     [header]="editando ? 'Editar Veículo' : 'Novo Veículo'"
     [modal]="true"
-    [style]="{ width: '480px' }"
+    [style]="{ width: '680px' }"
     [draggable]="false"
-  >
-
-    <div class="p-fluid form-grid">
-
+    [breakpoints]="{ '640px': '94vw' }"
+    ><div class="p-fluid form-grid">
       <div class="field">
-        <label>Marca</label>
-        <input pInputText type="text" [(ngModel)]="veiculoSelecionado.marca" />
+        <label for="veiculo-marca">Marca</label
+        ><input
+          id="veiculo-marca"
+          pInputText
+          type="text"
+          [(ngModel)]="veiculoSelecionado.marca"
+        />
       </div>
-
       <div class="field">
-        <label>Modelo</label>
-        <input pInputText type="text" [(ngModel)]="veiculoSelecionado.modelo" />
+        <label for="veiculo-modelo">Modelo</label
+        ><input
+          id="veiculo-modelo"
+          pInputText
+          type="text"
+          [(ngModel)]="veiculoSelecionado.modelo"
+        />
       </div>
-
       <div class="field">
-        <label>Placa</label>
-        <input pInputText type="text" [(ngModel)]="veiculoSelecionado.placa" />
+        <label for="veiculo-placa">Placa</label
+        ><input
+          id="veiculo-placa"
+          pInputText
+          type="text"
+          [(ngModel)]="veiculoSelecionado.placa"
+        />
       </div>
-
       <div class="field">
-        <label>Ano</label>
-        <input pInputText type="number" [(ngModel)]="veiculoSelecionado.ano" />
+        <label for="veiculo-ano">Ano</label
+        ><input
+          id="veiculo-ano"
+          pInputText
+          type="number"
+          [(ngModel)]="veiculoSelecionado.ano"
+          inputmode="numeric"
+        />
       </div>
-
       <div class="field full-width">
-        <label>Cliente</label>
-        <p-dropdown
+        <label for="veiculo-cliente">Cliente</label
+        ><p-dropdown
+          inputId="veiculo-cliente"
           [options]="clientes"
           [(ngModel)]="veiculoSelecionado.clienteId"
           optionLabel="nome"
@@ -123,24 +133,19 @@
           styleClass="w-full"
         />
       </div>
-
     </div>
-
-    <ng-template pTemplate="footer">
-      <p-button
-        label="Cancelar"
-        icon="pi pi-times"
-        [text]="true"
-        severity="secondary"
-        (onClick)="dialogVisivel = false"
-      />
-      <p-button
-        [label]="editando ? 'Atualizar' : 'Salvar'"
-        icon="pi pi-check"
-        (onClick)="salvar()"
-      />
-    </ng-template>
-
-  </p-dialog>
-
-</div>
+    <ng-template pTemplate="footer"
+      ><div class="dialog-actions">
+        <p-button
+          label="Cancelar"
+          icon="pi pi-times"
+          [text]="true"
+          severity="secondary"
+          (onClick)="dialogVisivel = false"
+        /><p-button
+          [label]="editando ? 'Atualizar' : 'Salvar'"
+          icon="pi pi-check"
+          (onClick)="salvar()"
+        /></div></ng-template
+  ></p-dialog>
+</section>

@@ -28,14 +28,13 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     DialogModule,
     ConfirmDialogModule,
     ToastModule,
-    DropdownModule
+    DropdownModule,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './veiculos.component.html',
-  styleUrl: './veiculos.component.scss'
+  styleUrl: './veiculos.component.scss',
 })
 export class VeiculosComponent implements OnInit {
-
   veiculos: Veiculo[] = [];
   clientes: Cliente[] = [];
   veiculoSelecionado: Veiculo = this.veiculoVazio();
@@ -48,7 +47,7 @@ export class VeiculosComponent implements OnInit {
     private veiculoService: VeiculoService,
     private clienteService: ClienteService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
   ) {}
 
   ngOnInit(): void {
@@ -57,7 +56,13 @@ export class VeiculosComponent implements OnInit {
   }
 
   veiculoVazio(): Veiculo {
-    return { marca: '', modelo: '', placa: '', ano: new Date().getFullYear(), clienteId: 0 };
+    return {
+      marca: '',
+      modelo: '',
+      placa: '',
+      ano: new Date().getFullYear(),
+      clienteId: 0,
+    };
   }
 
   listar(): void {
@@ -68,15 +73,19 @@ export class VeiculosComponent implements OnInit {
         this.carregando = false;
       },
       error: () => {
-        this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao carregar veículos' });
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao carregar veículos',
+        });
         this.carregando = false;
-      }
+      },
     });
   }
 
   listarClientes(): void {
     this.clienteService.listar().subscribe({
-      next: (data) => this.clientes = data
+      next: (data) => (this.clientes = data),
     });
   }
 
@@ -94,22 +103,42 @@ export class VeiculosComponent implements OnInit {
 
   salvar(): void {
     if (this.editando && this.veiculoSelecionado.id) {
-      this.veiculoService.atualizar(this.veiculoSelecionado.id, this.veiculoSelecionado).subscribe({
-        next: () => {
-          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Veículo atualizado!' });
-          this.dialogVisivel = false;
-          this.listar();
-        },
-        error: () => this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao atualizar veículo' })
-      });
+      this.veiculoService
+        .atualizar(this.veiculoSelecionado.id, this.veiculoSelecionado)
+        .subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Sucesso',
+              detail: 'Veículo atualizado!',
+            });
+            this.dialogVisivel = false;
+            this.listar();
+          },
+          error: () =>
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: 'Erro ao atualizar veículo',
+            }),
+        });
     } else {
       this.veiculoService.criar(this.veiculoSelecionado).subscribe({
         next: () => {
-          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Veículo cadastrado!' });
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'Veículo cadastrado!',
+          });
           this.dialogVisivel = false;
           this.listar();
         },
-        error: () => this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao cadastrar veículo' })
+        error: () =>
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Erro ao cadastrar veículo',
+          }),
       });
     }
   }
@@ -122,23 +151,33 @@ export class VeiculosComponent implements OnInit {
       accept: () => {
         this.veiculoService.deletar(veiculo.id!).subscribe({
           next: () => {
-            this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Veículo excluído!' });
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Sucesso',
+              detail: 'Veículo excluído!',
+            });
             this.listar();
           },
-          error: () => this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao excluir veículo' })
+          error: () =>
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: 'Erro ao excluir veículo',
+            }),
         });
-      }
+      },
     });
   }
 
   get veiculosFiltrados(): Veiculo[] {
     if (!this.busca) return this.veiculos;
     const termo = this.busca.toLowerCase();
-    return this.veiculos.filter(v =>
-      v.marca.toLowerCase().includes(termo) ||
-      v.modelo.toLowerCase().includes(termo) ||
-      v.placa.toLowerCase().includes(termo) ||
-      (v.clienteNome || '').toLowerCase().includes(termo)
+    return this.veiculos.filter(
+      (v) =>
+        v.marca.toLowerCase().includes(termo) ||
+        v.modelo.toLowerCase().includes(termo) ||
+        v.placa.toLowerCase().includes(termo) ||
+        (v.clienteNome || '').toLowerCase().includes(termo),
     );
   }
 }

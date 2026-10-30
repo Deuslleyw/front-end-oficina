@@ -1,0 +1,180 @@
+.usuarios-page {
+  padding: 0.5rem 0;
+}
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.75rem;
+}
+.page-header h1 {
+  margin: 0.35rem 0 0;
+  font-size: clamp(1.45rem, 3vw, 1.8rem);
+  font-weight: 700;
+}
+.page-header p {
+  margin: 0.35rem 0 0;
+  color: var(--text-color-secondary);
+}
+.page-eyebrow {
+  color: var(--primary-color);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.page-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.search-field {
+  position: relative;
+  display: flex;
+  flex: 0 1 430px;
+  align-items: center;
+  width: 100%;
+  max-width: 430px;
+}
+.search-field > i {
+  position: absolute;
+  left: 0.85rem;
+  color: var(--text-color-secondary);
+  pointer-events: none;
+}
+.search-field input {
+  width: 100%;
+  min-height: 2.65rem;
+  padding: 0.65rem 0.8rem 0.65rem 2.4rem;
+  color: var(--text-color);
+  background: var(--surface-ground);
+  border: 1px solid var(--surface-border);
+  border-radius: 6px;
+}
+.search-field input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.15rem
+    color-mix(in srgb, var(--primary-color) 22%, transparent);
+  outline: 0;
+}
+.result-count {
+  color: var(--text-color-secondary);
+  font-size: 0.82rem;
+}
+.table-card {
+  overflow: hidden;
+  border: 1px solid var(--surface-border);
+  border-radius: 12px;
+  background: var(--surface-card);
+}
+.empty-state {
+  text-align: center;
+  padding: 2rem !important;
+  color: var(--text-color-secondary);
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 1rem;
+  padding: 1rem 1.5rem;
+}
+.form-grid .full-width {
+  grid-column: 1/-1;
+}
+.field {
+  margin-bottom: 1.15rem;
+}
+.field label {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-weight: 600;
+}
+.form-grid input[pInputText],
+.form-grid ::ng-deep .p-password,
+.form-grid ::ng-deep .p-dropdown {
+  width: 100%;
+  min-height: 2.65rem;
+  color: var(--text-color);
+  background: var(--surface-ground);
+  border: 1px solid var(--surface-border);
+  border-radius: 6px;
+}
+.form-grid input[pInputText] {
+  padding: 0.65rem 0.8rem;
+}
+.form-grid input[pInputText]:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.15rem
+    color-mix(in srgb, var(--primary-color) 22%, transparent);
+  outline: 0;
+}
+.form-grid ::ng-deep .p-password {
+  display: flex;
+}
+.form-grid ::ng-deep .p-password input {
+  width: 100%;
+  color: var(--text-color);
+  background: transparent;
+  border: 0;
+}
+.form-grid ::ng-deep .p-dropdown {
+  display: flex;
+  align-items: center;
+}
+.form-grid ::ng-deep .p-dropdown .p-dropdown-label {
+  color: var(--text-color);
+  background: transparent;
+  border: 0;
+}
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+}
+.dialog-actions ::ng-deep .p-button,
+.page-header ::ng-deep .p-button {
+  min-height: 2.65rem;
+  border-radius: 6px;
+}
+.form-error {
+  margin: 0 1.5rem;
+  color: var(--red-300, #fca5a5);
+  font-size: 0.82rem;
+}
+@media (max-width: 640px) {
+  .page-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .page-header ::ng-deep .p-button {
+    width: 100%;
+  }
+  .page-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .search-field {
+    flex-basis: 100%;
+    max-width: none;
+  }
+  .result-count {
+    align-self: flex-end;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+  .form-grid .full-width {
+    grid-column: auto;
+  }
+  .dialog-actions {
+    justify-content: stretch;
+  }
+  .dialog-actions ::ng-deep .p-button {
+    flex: 1;
+  }
+}

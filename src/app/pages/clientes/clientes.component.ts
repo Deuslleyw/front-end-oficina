@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { ClienteService } from '../../services/cliente.service';
 import { Cliente } from '../../models/cliente';
 
-
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -26,14 +25,13 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     DialogModule,
     ConfirmDialogModule,
     ToastModule,
-    TagModule
+    TagModule,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './clientes.component.html',
-  styleUrl: './clientes.component.scss'
+  styleUrl: './clientes.component.scss',
 })
 export class ClientesComponent implements OnInit {
-
   clientes: Cliente[] = [];
   clienteSelecionado: Cliente = this.clienteVazio();
   dialogVisivel: boolean = false;
@@ -44,7 +42,7 @@ export class ClientesComponent implements OnInit {
   constructor(
     private clienteService: ClienteService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
   ) {}
 
   ngOnInit(): void {
@@ -63,9 +61,13 @@ export class ClientesComponent implements OnInit {
         this.carregando = false;
       },
       error: () => {
-        this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao carregar clientes' });
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao carregar clientes',
+        });
         this.carregando = false;
-      }
+      },
     });
   }
 
@@ -83,22 +85,42 @@ export class ClientesComponent implements OnInit {
 
   salvar(): void {
     if (this.editando && this.clienteSelecionado.id) {
-      this.clienteService.atualizar(this.clienteSelecionado.id, this.clienteSelecionado).subscribe({
-        next: () => {
-          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Cliente atualizado!' });
-          this.dialogVisivel = false;
-          this.listar();
-        },
-        error: () => this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao atualizar cliente' })
-      });
+      this.clienteService
+        .atualizar(this.clienteSelecionado.id, this.clienteSelecionado)
+        .subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Sucesso',
+              detail: 'Cliente atualizado!',
+            });
+            this.dialogVisivel = false;
+            this.listar();
+          },
+          error: () =>
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: 'Erro ao atualizar cliente',
+            }),
+        });
     } else {
       this.clienteService.criar(this.clienteSelecionado).subscribe({
         next: () => {
-          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Cliente cadastrado!' });
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'Cliente cadastrado!',
+          });
           this.dialogVisivel = false;
           this.listar();
         },
-        error: () => this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao cadastrar cliente' })
+        error: () =>
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Erro ao cadastrar cliente',
+          }),
       });
     }
   }
@@ -111,22 +133,32 @@ export class ClientesComponent implements OnInit {
       accept: () => {
         this.clienteService.deletar(cliente.id!).subscribe({
           next: () => {
-            this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Cliente excluído!' });
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Sucesso',
+              detail: 'Cliente excluído!',
+            });
             this.listar();
           },
-          error: () => this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao excluir cliente' })
+          error: () =>
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: 'Erro ao excluir cliente',
+            }),
         });
-      }
+      },
     });
   }
 
   get clientesFiltrados(): Cliente[] {
     if (!this.busca) return this.clientes;
     const termo = this.busca.toLowerCase();
-    return this.clientes.filter(c =>
-      c.nome.toLowerCase().includes(termo) ||
-      c.email.toLowerCase().includes(termo) ||
-      c.cpf.includes(termo)
+    return this.clientes.filter(
+      (c) =>
+        c.nome.toLowerCase().includes(termo) ||
+        c.email.toLowerCase().includes(termo) ||
+        c.cpf.includes(termo),
     );
   }
 }

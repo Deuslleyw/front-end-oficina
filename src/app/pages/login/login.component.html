@@ -1,53 +1,100 @@
-<div class="login-container">
-  <p-card class="login-card">
-
-    <div class="login-header">
-      <i class="pi pi-wrench login-icon"></i>
-      <h1>Oficina</h1>
-      <p>Sistema de Gestão</p>
+<main class="login-page">
+  <section class="login-shell" aria-labelledby="login-title">
+    <div class="login-brand" aria-label="Sistema de Oficina">
+      <span class="login-brand__icon" aria-hidden="true"
+        ><i class="pi pi-wrench"></i
+      ></span>
+      <span class="login-brand__name">Oficina</span>
     </div>
 
-    <div class="p-fluid">
-
-      <div class="field">
-        <label for="email">Email</label>
-        <input
-          pInputText
-          id="email"
-          type="email"
-          [(ngModel)]="request.email"
-          placeholder="seu@email.com"
-        />
-      </div>
-
-      <div class="field">
-        <label for="senha">Senha</label>
-        <p-password
-          id="senha"
-          [(ngModel)]="request.senha"
-          placeholder="Sua senha"
-          [feedback]="false"
-          [toggleMask]="true"
-          styleClass="w-full"
-        />
-      </div>
-
-      <p-message
-        *ngIf="erro"
-        severity="error"
-        [text]="erro"
-        styleClass="w-full mb-3"
-      />
-
-      <p-button
-        label="Entrar"
-        icon="pi pi-sign-in"
-        styleClass="w-full"
-        [loading]="carregando"
-        (onClick)="login()"
-      />
-
+    <div class="login-heading">
+      <p class="login-heading__eyebrow">Sistema de Gestão</p>
+      <h1 id="login-title">Acesse sua conta</h1>
+      <p>Entre para gerenciar sua oficina com praticidade.</p>
     </div>
 
-  </p-card>
-</div>
+    <form
+      class="login-form"
+      (ngSubmit)="login()"
+      #loginForm="ngForm"
+      novalidate
+    >
+      <div class="login-field">
+        <label for="email">E-mail</label>
+        <div class="login-input-wrapper">
+          <i class="pi pi-envelope" aria-hidden="true"></i>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            [(ngModel)]="request.email"
+            autocomplete="username"
+            placeholder="seu@email.com"
+            required
+            aria-describedby="email-help"
+            [attr.aria-invalid]="
+              loginForm.submitted &&
+              (!request.email || !loginForm.controls['email'].valid)
+            "
+          />
+        </div>
+        <small id="email-help">Use o e-mail cadastrado no sistema.</small>
+      </div>
+
+      <div class="login-field">
+        <div class="login-field__label-row">
+          <label for="senha">Senha</label>
+        </div>
+        <div class="login-input-wrapper">
+          <i class="pi pi-lock" aria-hidden="true"></i>
+          <input
+            id="senha"
+            name="senha"
+            [type]="senhaVisivel ? 'text' : 'password'"
+            [(ngModel)]="request.senha"
+            autocomplete="current-password"
+            placeholder="Digite sua senha"
+            required
+            aria-describedby="senha-help"
+            [attr.aria-invalid]="loginForm.submitted && !request.senha"
+          />
+          <button
+            class="password-toggle"
+            type="button"
+            [attr.aria-label]="senhaVisivel ? 'Ocultar senha' : 'Mostrar senha'"
+            [attr.aria-pressed]="senhaVisivel"
+            (click)="alternarSenha()"
+          >
+            <i
+              [class]="senhaVisivel ? 'pi pi-eye-slash' : 'pi pi-eye'"
+              aria-hidden="true"
+            ></i>
+          </button>
+        </div>
+        <small id="senha-help">Sua senha é protegida e não será exibida.</small>
+      </div>
+
+      <p *ngIf="erro" class="login-alert" role="alert" aria-live="assertive">
+        <i class="pi pi-exclamation-circle" aria-hidden="true"></i>
+        <span>{{ erro }}</span>
+      </p>
+
+      <button
+        class="login-submit"
+        type="submit"
+        [disabled]="carregando"
+        [attr.aria-busy]="carregando"
+      >
+        <i
+          *ngIf="carregando"
+          class="pi pi-spin pi-spinner"
+          aria-hidden="true"
+        ></i>
+        <i *ngIf="!carregando" class="pi pi-sign-in" aria-hidden="true"></i>
+        <span>{{ carregando ? "Entrando..." : "Entrar" }}</span>
+      </button>
+    </form>
+  </section>
+
+  <p class="login-footer">Acesso seguro ao Sistema de Oficina</p>
+</main>

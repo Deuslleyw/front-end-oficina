@@ -1,12 +1,51 @@
 .layout {
   display: flex;
   min-height: 100vh;
-
+  background: var(--surface-ground);
+}
+.main-content {
+  position: relative;
+  min-width: 0;
+  flex: 1;
+  margin-left: 260px;
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+.mobile-menu-toggle {
+  display: none;
+}
+@media (max-width: 768px) {
   .main-content {
-    margin-left: 260px;
-    flex: 1;
-    padding: 2rem;
-    background: var(--surface-ground);
-    min-height: 100vh;
+    margin-left: 0;
+    padding: 4.5rem 1rem 1.25rem;
+  }
+  .mobile-menu-toggle {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 10;
+    display: grid;
+    width: 2.35rem;
+    height: 2.35rem;
+    place-items: center;
+    color: var(--text-color);
+    border: 1px solid var(--surface-border);
+    border-radius: 0.5rem;
+    background: var(--surface-card);
+    cursor: pointer;
+  }
+  .mobile-menu-toggle:hover,
+  .mobile-menu-toggle:focus-visible {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    outline: 0;
+  }
+  .layout-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    display: block;
+    border: 0;
+    background: rgb(0 0 0 / 55%);
+    cursor: pointer;
   }
 }

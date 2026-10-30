@@ -1,1 +1,144 @@
-<p>usuarios works!</p>
+<section class="usuarios-page" aria-labelledby="usuarios-title">
+  <p-toast />
+  <header class="page-header">
+    <div>
+      <span class="page-eyebrow">Administração</span>
+      <h1 id="usuarios-title">Usuários</h1>
+      <p>Gerencie os acessos administrativos do sistema.</p>
+    </div>
+    <p-button label="Novo usuário" icon="pi pi-plus" (onClick)="abrirNovo()" />
+  </header>
+  <div class="page-toolbar">
+    <label class="search-field" for="busca-usuarios"
+      ><i class="pi pi-search" aria-hidden="true"></i
+      ><input
+        id="busca-usuarios"
+        pInputText
+        type="search"
+        [(ngModel)]="busca"
+        placeholder="Buscar por nome ou e-mail"
+        aria-label="Buscar usuários" /></label
+    ><span class="result-count" aria-live="polite"
+      >{{ usuariosFiltrados.length }}
+      {{ usuariosFiltrados.length === 1 ? "usuário" : "usuários" }}</span
+    >
+  </div>
+  <div class="table-card">
+    <p-table
+      [value]="usuariosFiltrados"
+      [loading]="carregando"
+      [paginator]="true"
+      [rows]="10"
+      styleClass="p-datatable-striped"
+      [rowHover]="true"
+      responsiveLayout="scroll"
+      ><ng-template pTemplate="header"
+        ><tr>
+          <th scope="col">Nome</th>
+          <th scope="col">E-mail</th>
+          <th scope="col">Perfil</th>
+        </tr></ng-template
+      ><ng-template pTemplate="body" let-usuario
+        ><tr>
+          <td data-label="Nome">{{ usuario.nome }}</td>
+          <td data-label="E-mail">{{ usuario.email }}</td>
+          <td data-label="Perfil">
+            <p-tag
+              [value]="usuario.perfil === 'ADMIN' ? 'Administrador' : 'Usuário'"
+              [severity]="getPerfilSeverity(usuario.perfil)"
+            />
+          </td></tr></ng-template
+      ><ng-template pTemplate="emptymessage"
+        ><tr>
+          <td colspan="3" class="empty-state">Nenhum usuário encontrado.</td>
+        </tr></ng-template
+      ></p-table
+    >
+  </div>
+  <p-dialog
+    [(visible)]="dialogVisivel"
+    header="Novo Usuário"
+    [modal]="true"
+    [style]="{ width: '680px' }"
+    [draggable]="false"
+    [breakpoints]="{ '640px': '94vw' }"
+    ><div class="p-fluid form-grid">
+      <div class="field full-width">
+        <label for="usuario-nome">Nome</label
+        ><input
+          id="usuario-nome"
+          pInputText
+          type="text"
+          [(ngModel)]="usuarioSelecionado.nome"
+          autocomplete="name"
+          [attr.aria-invalid]="
+            formularioEnviado && !usuarioSelecionado.nome.trim()
+          "
+        />
+      </div>
+      <div class="field full-width">
+        <label for="usuario-email">E-mail</label
+        ><input
+          id="usuario-email"
+          pInputText
+          type="email"
+          [(ngModel)]="usuarioSelecionado.email"
+          autocomplete="email"
+          placeholder="usuario@oficina.com"
+          [attr.aria-invalid]="
+            formularioEnviado && !emailValido(usuarioSelecionado.email.trim())
+          "
+        />
+      </div>
+      <div class="field">
+        <label for="usuario-senha">Senha</label
+        ><p-password
+          inputId="usuario-senha"
+          [(ngModel)]="usuarioSelecionado.senha"
+          [feedback]="false"
+          [toggleMask]="true"
+          autocomplete="new-password"
+          styleClass="w-full"
+          [attr.aria-invalid]="formularioEnviado && !usuarioSelecionado.senha"
+        />
+      </div>
+      <div class="field">
+        <label for="usuario-perfil">Perfil</label
+        ><p-dropdown
+          inputId="usuario-perfil"
+          [options]="perfilOptions"
+          [(ngModel)]="usuarioSelecionado.perfil"
+          optionLabel="label"
+          optionValue="value"
+          styleClass="w-full"
+        />
+      </div>
+    </div>
+    <p
+      *ngIf="
+        formularioEnviado &&
+        (!usuarioSelecionado.nome.trim() ||
+          !emailValido(usuarioSelecionado.email.trim()) ||
+          !usuarioSelecionado.senha)
+      "
+      class="form-error"
+      role="alert"
+    >
+      Preencha nome, e-mail válido e senha para continuar.
+    </p>
+    <ng-template pTemplate="footer"
+      ><div class="dialog-actions">
+        <p-button
+          label="Cancelar"
+          icon="pi pi-times"
+          [text]="true"
+          severity="secondary"
+          (onClick)="dialogVisivel = false"
+        /><p-button
+          label="Salvar"
+          icon="pi pi-check"
+          [loading]="salvando"
+          (onClick)="salvar()"
+        /></div></ng-template
+  ></p-dialog>
+</section>

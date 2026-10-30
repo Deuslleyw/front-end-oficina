@@ -4,7 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { OrdemServicoService } from '../../services/ordem-servico.service';
 import { ClienteService } from '../../services/cliente.service';
 import { VeiculoService } from '../../services/veiculo.service';
-import { OrdemServico, OrdemServicoRequest, StatusOrdem } from '../../models/ordem-servico';
+import {
+  OrdemServico,
+  OrdemServicoRequest,
+  StatusOrdem,
+} from '../../models/ordem-servico';
 import { Cliente } from '../../models/cliente';
 import { Veiculo } from '../../models/veiculo';
 
@@ -12,6 +16,7 @@ import { Veiculo } from '../../models/veiculo';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
@@ -30,20 +35,20 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     TableModule,
     ButtonModule,
     InputTextModule,
+    InputTextareaModule,
     DialogModule,
     ConfirmDialogModule,
     ToastModule,
     DropdownModule,
     TagModule,
     InputNumberModule,
-    DividerModule
+    DividerModule,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './ordens-servico.component.html',
-  styleUrl: './ordens-servico.component.scss'
+  styleUrl: './ordens-servico.component.scss',
 })
 export class OrdensServicoComponent implements OnInit {
-
   ordens: OrdemServico[] = [];
   clientes: Cliente[] = [];
   veiculosDoCliente: Veiculo[] = [];
@@ -63,7 +68,7 @@ export class OrdensServicoComponent implements OnInit {
     { label: 'Aberta', value: 'ABERTA' },
     { label: 'Em Andamento', value: 'EM_ANDAMENTO' },
     { label: 'Concluída', value: 'CONCLUIDA' },
-    { label: 'Cancelada', value: 'CANCELADA' }
+    { label: 'Cancelada', value: 'CANCELADA' },
   ];
 
   constructor(
@@ -71,7 +76,7 @@ export class OrdensServicoComponent implements OnInit {
     private clienteService: ClienteService,
     private veiculoService: VeiculoService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
   ) {}
 
   ngOnInit(): void {
@@ -81,7 +86,13 @@ export class OrdensServicoComponent implements OnInit {
   }
 
   ordemVazia(): OrdemServicoRequest {
-    return { descricao: '', valor: 0, status: 'ABERTA', clienteId: 0, veiculoId: 0 };
+    return {
+      descricao: '',
+      valor: 0,
+      status: 'ABERTA',
+      clienteId: 0,
+      veiculoId: 0,
+    };
   }
 
   listar(): void {
@@ -92,28 +103,32 @@ export class OrdensServicoComponent implements OnInit {
         this.carregando = false;
       },
       error: () => {
-        this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao carregar ordens' });
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao carregar ordens',
+        });
         this.carregando = false;
-      }
+      },
     });
   }
 
   listarClientes(): void {
     this.clienteService.listar().subscribe({
-      next: (data) => this.clientes = data
+      next: (data) => (this.clientes = data),
     });
   }
 
   listarVeiculos(): void {
     this.veiculoService.listar().subscribe({
-      next: (data) => this.todosVeiculos = data
+      next: (data) => (this.todosVeiculos = data),
     });
   }
 
   onClienteChange(): void {
     this.ordemSelecionada.veiculoId = 0;
     this.veiculosDoCliente = this.todosVeiculos.filter(
-      v => v.clienteId === this.ordemSelecionada.clienteId
+      (v) => v.clienteId === this.ordemSelecionada.clienteId,
     );
   }
 
@@ -131,10 +146,10 @@ export class OrdensServicoComponent implements OnInit {
       valor: ordem.valor,
       status: ordem.status,
       clienteId: ordem.cliente!.id,
-      veiculoId: ordem.veiculo!.id!
+      veiculoId: ordem.veiculo!.id!,
     };
     this.veiculosDoCliente = this.todosVeiculos.filter(
-      v => v.clienteId === ordem.cliente!.id
+      (v) => v.clienteId === ordem.cliente!.id,
     );
     this.editando = true;
     this.editandoId = ordem.id!;
@@ -148,22 +163,42 @@ export class OrdensServicoComponent implements OnInit {
 
   salvar(): void {
     if (this.editando && this.editandoId) {
-      this.ordemServicoService.atualizar(this.editandoId, this.ordemSelecionada).subscribe({
-        next: () => {
-          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Ordem atualizada!' });
-          this.dialogFormVisivel = false;
-          this.listar();
-        },
-        error: () => this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao atualizar ordem' })
-      });
+      this.ordemServicoService
+        .atualizar(this.editandoId, this.ordemSelecionada)
+        .subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Sucesso',
+              detail: 'Ordem atualizada!',
+            });
+            this.dialogFormVisivel = false;
+            this.listar();
+          },
+          error: () =>
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: 'Erro ao atualizar ordem',
+            }),
+        });
     } else {
       this.ordemServicoService.criar(this.ordemSelecionada).subscribe({
         next: () => {
-          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Ordem criada!' });
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'Ordem criada!',
+          });
           this.dialogFormVisivel = false;
           this.listar();
         },
-        error: () => this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao criar ordem' })
+        error: () =>
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Erro ao criar ordem',
+          }),
       });
     }
   }
@@ -179,12 +214,21 @@ export class OrdensServicoComponent implements OnInit {
       accept: () => {
         this.ordemServicoService.cancelar(ordem.id!).subscribe({
           next: () => {
-            this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Ordem cancelada!' });
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Sucesso',
+              detail: 'Ordem cancelada!',
+            });
             this.listar();
           },
-          error: () => this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao cancelar ordem' })
+          error: () =>
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: 'Erro ao cancelar ordem',
+            }),
         });
-      }
+      },
     });
   }
 
@@ -192,22 +236,32 @@ export class OrdensServicoComponent implements OnInit {
     return status !== 'CANCELADA' && status !== 'CONCLUIDA';
   }
 
-  getSeverity(status: StatusOrdem): 'success' | 'secondary' | 'info' | 'warning' | 'danger' | 'contrast' | undefined {
-    const map: Record<StatusOrdem, 'success' | 'info' | 'warning' | 'danger'> = {
-      'ABERTA': 'warning',
-      'EM_ANDAMENTO': 'info',
-      'CONCLUIDA': 'success',
-      'CANCELADA': 'danger'
-    };
+  getSeverity(
+    status: StatusOrdem,
+  ):
+    | 'success'
+    | 'secondary'
+    | 'info'
+    | 'warning'
+    | 'danger'
+    | 'contrast'
+    | undefined {
+    const map: Record<StatusOrdem, 'success' | 'info' | 'warning' | 'danger'> =
+      {
+        ABERTA: 'warning',
+        EM_ANDAMENTO: 'info',
+        CONCLUIDA: 'success',
+        CANCELADA: 'danger',
+      };
     return map[status];
   }
 
   getStatusLabel(status: StatusOrdem): string {
     const map: Record<StatusOrdem, string> = {
-      'ABERTA': 'Aberta',
-      'EM_ANDAMENTO': 'Em Andamento',
-      'CONCLUIDA': 'Concluída',
-      'CANCELADA': 'Cancelada'
+      ABERTA: 'Aberta',
+      EM_ANDAMENTO: 'Em Andamento',
+      CONCLUIDA: 'Concluída',
+      CANCELADA: 'Cancelada',
     };
     return map[status];
   }
@@ -215,11 +269,12 @@ export class OrdensServicoComponent implements OnInit {
   get ordensFiltradas(): OrdemServico[] {
     if (!this.busca) return this.ordens;
     const termo = this.busca.toLowerCase();
-    return this.ordens.filter(o =>
-      o.descricao.toLowerCase().includes(termo) ||
-      o.cliente?.nome.toLowerCase().includes(termo) ||
-      o.veiculo?.placa.toLowerCase().includes(termo) ||
-      o.status.toLowerCase().includes(termo)
+    return this.ordens.filter(
+      (o) =>
+        o.descricao.toLowerCase().includes(termo) ||
+        o.cliente?.nome.toLowerCase().includes(termo) ||
+        o.veiculo?.placa.toLowerCase().includes(termo) ||
+        o.status.toLowerCase().includes(termo),
     );
   }
 }
