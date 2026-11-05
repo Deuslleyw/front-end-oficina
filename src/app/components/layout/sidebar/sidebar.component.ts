@@ -14,15 +14,15 @@ export class SidebarComponent {
   @Input() aberto = false;
   @Output() navegacao = new EventEmitter<void>();
   nome = this.authService.getNome() || 'Usuário';
-  perfil = this.authService.getPerfil() || 'Acesso autorizado';
+  perfil = this.authService.getPerfil() === 'ADMIN' ? 'Administrador' : 'Usuário';
   readonly isAdmin = this.authService.isAdmin();
   menuItems: MenuItem[] = [
-    { label: 'Dashboard', icon: 'pi pi-home', routerLink: '/dashboard' },
+    { label: 'Dashboard', icon: 'pi pi-th-large', routerLink: '/dashboard' },
     { label: 'Clientes', icon: 'pi pi-users', routerLink: '/clientes' },
     { label: 'Veículos', icon: 'pi pi-car', routerLink: '/veiculos' },
     {
-      label: 'Ordens de Serviço',
-      icon: 'pi pi-file',
+      label: 'Ordens de serviço',
+      icon: 'pi pi-file-edit',
       routerLink: '/ordens-servico',
     },
   ];
@@ -33,7 +33,7 @@ export class SidebarComponent {
     if (this.isAdmin)
       this.menuItems.push({
         label: 'Usuários',
-        icon: 'pi pi-user-edit',
+        icon: 'pi pi-cog',
         routerLink: '/usuarios',
       });
   }

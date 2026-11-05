@@ -1,15 +1,28 @@
 <div class="layout" [class.menu-open]="menuAberto">
   <app-sidebar [aberto]="menuAberto" (navegacao)="fecharMenu()" />
-  <main class="main-content">
-    <button
-      class="mobile-menu-toggle"
-      type="button"
-      aria-label="Abrir menu de navegação"
-      (click)="alternarMenu()"
-    >
-      <i class="pi pi-bars" aria-hidden="true"></i></button
-    ><router-outlet />
-  </main>
+  <div class="app-shell">
+    <header class="app-topbar">
+      <button
+        class="mobile-menu-toggle"
+        type="button"
+        [attr.aria-expanded]="menuAberto"
+        aria-controls="navegacao-principal"
+        [attr.aria-label]="menuAberto ? 'Fechar menu de navegação' : 'Abrir menu de navegação'"
+        (click)="alternarMenu()"
+      >
+        <i class="pi pi-bars" aria-hidden="true"></i>
+      </button>
+      <div class="topbar-context" aria-live="polite">
+        <span class="topbar-product">OFICINATECH</span>
+        <span class="topbar-separator" aria-hidden="true">/</span>
+        <strong>{{ tituloPagina }}</strong>
+      </div>
+      <app-navbar />
+    </header>
+    <main class="main-content">
+      <router-outlet />
+    </main>
+  </div>
   <button
     *ngIf="menuAberto"
     class="layout-backdrop"

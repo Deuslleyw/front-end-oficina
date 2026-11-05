@@ -1,0 +1,39 @@
+.topbar-user {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.65rem;
+  margin-left: auto;
+}
+.topbar-user-icon {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 auto;
+  place-items: center;
+  color: #f3f2f2;
+  border: 1px solid rgba(243, 242, 242, 0.26);
+}
+.topbar-user-details {
+  display: grid;
+  min-width: 0;
+  gap: 0.15rem;
+}
+.topbar-user-details strong {
+  max-width: 12rem;
+  overflow: hidden;
+  color: #f3f2f2;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.topbar-user-details small {
+  color: rgba(243, 242, 242, 0.56);
+  font-size: 0.65rem;
+}
+@media (max-width: 520px) {
+  .topbar-user-details {
+    display: none;
+  }
+}

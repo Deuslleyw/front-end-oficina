@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Cliente } from '../models/cliente';
+import { Cliente, ClienteRequest } from '../models/cliente';
 
 @Injectable({
   providedIn: 'root'
@@ -20,11 +20,11 @@ export class ClienteService {
     return this.http.get<Cliente>(`${this.apiUrl}/${id}`);
   }
 
-  criar(cliente: Cliente): Observable<Cliente> {
+  criar(cliente: ClienteRequest): Observable<Cliente> {
     return this.http.post<Cliente>(this.apiUrl, cliente);
   }
 
-  atualizar(id: number, cliente: Cliente): Observable<Cliente> {
+  atualizar(id: number, cliente: ClienteRequest): Observable<Cliente> {
     return this.http.put<Cliente>(`${this.apiUrl}/${id}`, cliente);
   }
 

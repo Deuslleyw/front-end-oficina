@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -8,5 +9,8 @@ import { Component } from '@angular/core';
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
+  readonly nome = this.authService.getNome() || 'Usuário';
+  readonly perfil = this.authService.isAdmin() ? 'Administrador' : 'Usuário';
 
+  constructor(private readonly authService: AuthService) {}
 }

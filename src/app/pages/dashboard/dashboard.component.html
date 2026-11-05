@@ -1,72 +1,102 @@
-<div class="dashboard">
+<section class="dashboard" aria-labelledby="dashboard-title">
+  <header class="dashboard-header">
+    <div>
+      <p class="page-eyebrow">Painel</p>
+      <h1 id="dashboard-title">Visão geral</h1>
+      <p class="page-description">
+        Acompanhe os cadastros e o andamento das ordens de serviço.
+      </p>
+    </div>
+    <button
+      class="refresh-button"
+      type="button"
+      [disabled]="carregando"
+      (click)="carregarDados()"
+    >
+      <i class="pi pi-refresh" [class.is-spinning]="carregando" aria-hidden="true"></i>
+      <span>Atualizar</span>
+    </button>
+  </header>
 
-  <div class="page-header">
-    <h2>Dashboard</h2>
-    <p>Visão geral do sistema</p>
+  <div *ngIf="erroCarregamento" class="dashboard-error" role="alert">
+    <i class="pi pi-exclamation-circle" aria-hidden="true"></i>
+    <p>
+      Alguns dados não puderam ser carregados. Os indicadores indisponíveis são
+      exibidos como —.
+    </p>
+    <button type="button" (click)="carregarDados()">Tentar novamente</button>
   </div>
 
-  <div class="cards-grid">
-
-    <div class="summary-card clientes">
-      <div class="card-icon">
-        <i class="pi pi-users"></i>
-      </div>
-      <div class="card-info">
-        <span class="card-valor">{{ totalClientes }}</span>
-        <span class="card-label">Clientes</span>
-      </div>
-    </div>
-
-    <div class="summary-card veiculos">
-      <div class="card-icon">
-        <i class="pi pi-car"></i>
-      </div>
-      <div class="card-info">
-        <span class="card-valor">{{ totalVeiculos }}</span>
-        <span class="card-label">Veículos</span>
-      </div>
-    </div>
-
-    <div class="summary-card abertas">
-      <div class="card-icon">
-        <i class="pi pi-file-edit"></i>
-      </div>
-      <div class="card-info">
-        <span class="card-valor">{{ ordensAbertas }}</span>
-        <span class="card-label">Ordens Abertas</span>
-      </div>
-    </div>
-
-    <div class="summary-card andamento">
-      <div class="card-icon">
-        <i class="pi pi-spinner"></i>
-      </div>
-      <div class="card-info">
-        <span class="card-valor">{{ ordensEmAndamento }}</span>
-        <span class="card-label">Em Andamento</span>
-      </div>
-    </div>
-
-    <div class="summary-card concluidas">
-      <div class="card-icon">
-        <i class="pi pi-check-circle"></i>
-      </div>
-      <div class="card-info">
-        <span class="card-valor">{{ ordensConcluidas }}</span>
-        <span class="card-label">Concluídas</span>
-      </div>
-    </div>
-
-    <div class="summary-card canceladas">
-      <div class="card-icon">
-        <i class="pi pi-times-circle"></i>
-      </div>
-      <div class="card-info">
-        <span class="card-valor">{{ ordensCanceladas }}</span>
-        <span class="card-label">Canceladas</span>
-      </div>
-    </div>
-
+  <div class="metrics-heading">
+    <h2>Indicadores da oficina</h2>
+    <span *ngIf="carregando" role="status">Carregando dados da API…</span>
   </div>
 
-</div>
+  <div class="metrics-grid" aria-label="Indicadores atuais">
+    <article class="metric-card">
+      <div class="metric-topline">
+        <span class="metric-icon"><i class="pi pi-users" aria-hidden="true"></i></span>
+        <span class="metric-category">Cadastros</span>
+      </div>
+      <strong class="metric-value" [class.is-loading]="carregando" aria-live="polite">
+        {{ carregando ? '' : totalClientes === null ? '—' : totalClientes }}
+      </strong>
+      <span class="metric-label">Clientes</span>
+    </article>
+
+    <article class="metric-card">
+      <div class="metric-topline">
+        <span class="metric-icon"><i class="pi pi-car" aria-hidden="true"></i></span>
+        <span class="metric-category">Cadastros</span>
+      </div>
+      <strong class="metric-value" [class.is-loading]="carregando" aria-live="polite">
+        {{ carregando ? '' : totalVeiculos === null ? '—' : totalVeiculos }}
+      </strong>
+      <span class="metric-label">Veículos</span>
+    </article>
+
+    <article class="metric-card metric-card--status">
+      <div class="metric-topline">
+        <span class="metric-icon"><i class="pi pi-file-edit" aria-hidden="true"></i></span>
+        <span class="metric-category">Ordens de serviço</span>
+      </div>
+      <strong class="metric-value" [class.is-loading]="carregando" aria-live="polite">
+        {{ carregando ? '' : ordensAbertas === null ? '—' : ordensAbertas }}
+      </strong>
+      <span class="metric-label">Abertas</span>
+    </article>
+
+    <article class="metric-card metric-card--status">
+      <div class="metric-topline">
+        <span class="metric-icon"><i class="pi pi-spinner" aria-hidden="true"></i></span>
+        <span class="metric-category">Ordens de serviço</span>
+      </div>
+      <strong class="metric-value" [class.is-loading]="carregando" aria-live="polite">
+        {{ carregando ? '' : ordensEmAndamento === null ? '—' : ordensEmAndamento }}
+      </strong>
+      <span class="metric-label">Em andamento</span>
+    </article>
+
+    <article class="metric-card metric-card--status">
+      <div class="metric-topline">
+        <span class="metric-icon"><i class="pi pi-check-circle" aria-hidden="true"></i></span>
+        <span class="metric-category">Ordens de serviço</span>
+      </div>
+      <strong class="metric-value" [class.is-loading]="carregando" aria-live="polite">
+        {{ carregando ? '' : ordensConcluidas === null ? '—' : ordensConcluidas }}
+      </strong>
+      <span class="metric-label">Concluídas</span>
+    </article>
+
+    <article class="metric-card metric-card--status">
+      <div class="metric-topline">
+        <span class="metric-icon"><i class="pi pi-times-circle" aria-hidden="true"></i></span>
+        <span class="metric-category">Ordens de serviço</span>
+      </div>
+      <strong class="metric-value" [class.is-loading]="carregando" aria-live="polite">
+        {{ carregando ? '' : ordensCanceladas === null ? '—' : ordensCanceladas }}
+      </strong>
+      <span class="metric-label">Canceladas</span>
+    </article>
+  </div>
+</section>

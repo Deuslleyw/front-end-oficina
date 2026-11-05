@@ -1,61 +1,98 @@
 <section class="clientes-page" aria-labelledby="clientes-title">
-  <p-toast /><p-confirmDialog />
+  <p-toast />
+  <p-confirmDialog />
+
   <header class="page-header">
     <div>
-      <span class="page-eyebrow">Cadastros</span>
+      <nav class="page-breadcrumb" aria-label="Localização">
+        <span>OficinaTech</span><i class="pi pi-angle-right" aria-hidden="true"></i><span>Cadastros</span>
+      </nav>
+      <span class="page-eyebrow">Gestão de clientes</span>
       <h1 id="clientes-title">Clientes</h1>
-      <p>Gerencie os clientes da oficina.</p>
+      <p>Consulte os contatos e mantenha os cadastros da oficina em dia.</p>
     </div>
-    <p-button label="Novo cliente" icon="pi pi-plus" (onClick)="abrirNovo()" />
+    <p-button
+      label="Novo cliente"
+      icon="pi pi-plus"
+      (onClick)="abrirNovo()"
+    />
   </header>
+
   <div class="page-toolbar">
-    <label class="search-field" for="busca-clientes"
-      ><i class="pi pi-search" aria-hidden="true"></i
-      ><input
+    <label class="search-field" for="busca-clientes">
+      <i class="pi pi-search" aria-hidden="true"></i>
+      <input
         id="busca-clientes"
         pInputText
         type="search"
         [(ngModel)]="busca"
-        placeholder="Buscar por nome, e-mail ou CPF"
-        aria-label="Buscar clientes" /></label
-    ><span class="result-count" aria-live="polite"
-      >{{ clientesFiltrados.length }}
-      {{ clientesFiltrados.length === 1 ? "cliente" : "clientes" }}</span
-    >
+        placeholder="Buscar por nome, e-mail ou telefone"
+        aria-label="Buscar clientes por nome, e-mail ou telefone"
+      />
+    </label>
+    <div class="toolbar-meta">
+      <span class="result-count" aria-live="polite">
+        <strong>{{ clientesFiltrados.length.toString().padStart(2, '0') }}</strong>
+        {{ clientesFiltrados.length === 1 ? "cliente encontrado" : "clientes encontrados" }}
+      </span>
+      <p-button
+        icon="pi pi-refresh"
+        [text]="true"
+        severity="secondary"
+        aria-label="Atualizar lista de clientes"
+        [disabled]="carregando"
+        (onClick)="listar()"
+      />
+    </div>
   </div>
+
   <div class="table-card">
     <p-table
       [value]="clientesFiltrados"
       [loading]="carregando"
       [paginator]="true"
       [rows]="10"
-      styleClass="p-datatable-striped"
       [rowHover]="true"
       responsiveLayout="scroll"
+      styleClass="clients-table"
+      [sortField]="'nome'"
+      [sortOrder]="1"
       ><ng-template pTemplate="header">
         <tr>
-          <th scope="col">Nome</th>
-          <th scope="col">E-mail</th>
-          <th scope="col">Telefone</th>
-          <th scope="col">CPF</th>
+          <th scope="col" pSortableColumn="nome">Cliente <p-sortIcon field="nome" /></th>
+          <th scope="col">Contato</th>
           <th scope="col" class="actions-column">Ações</th>
-        </tr> </ng-template
-      ><ng-template pTemplate="body" let-cliente>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-cliente>
         <tr>
-          <td data-label="Nome">{{ cliente.nome }}</td>
-          <td data-label="E-mail">{{ cliente.email }}</td>
-          <td data-label="Telefone">{{ cliente.telefone }}</td>
-          <td data-label="CPF">{{ cliente.cpf }}</td>
+          <td data-label="Cliente">
+            <div class="cliente-identidade">
+              <span class="cliente-avatar" aria-hidden="true">{{ iniciaisCliente(cliente.nome) }}</span>
+              <strong>{{ cliente.nome }}</strong>
+            </div>
+          </td>
+          <td data-label="Contato">
+            <div class="cliente-contato">
+              <span *ngIf="cliente.email" class="contact-item">
+                <i class="pi pi-envelope" aria-hidden="true"></i>{{ cliente.email }}
+              </span>
+              <span class="contact-item">
+                <i class="pi pi-phone" aria-hidden="true"></i>{{ formatarTelefone(cliente.telefone) }}
+              </span>
+            </div>
+          </td>
           <td data-label="Ações">
             <div class="acoes">
               <p-button
                 icon="pi pi-pencil"
                 [rounded]="true"
                 [text]="true"
-                severity="info"
+                severity="secondary"
                 aria-label="Editar cliente"
                 (onClick)="abrirEdicao(cliente)"
-              /><p-button
+              />
+              <p-button
                 icon="pi pi-trash"
                 [rounded]="true"
                 [text]="true"
@@ -65,75 +102,179 @@
               />
             </div>
           </td>
-        </tr> </ng-template
-      ><ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="5" class="empty-state">Nenhum cliente encontrado.</td>
         </tr>
-      </ng-template></p-table
-    >
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="3" class="empty-state">
+            <i class="pi pi-users" aria-hidden="true"></i>
+            <strong>Nenhum cliente encontrado</strong>
+            <span>Cadastre um cliente ou ajuste a busca.</span>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="paginatorleft" let-state>
+        <span class="paginator-total" aria-live="polite">
+          Mostrando {{ state.totalRecords === 0 ? 0 : state.first + 1 }}–{{ state.first + state.rows < state.totalRecords ? state.first + state.rows : state.totalRecords }} de {{ state.totalRecords }} clientes
+        </span>
+      </ng-template>
+    </p-table>
   </div>
+
   <p-dialog
     [(visible)]="dialogVisivel"
-    [header]="editando ? 'Editar Cliente' : 'Novo Cliente'"
+    [showHeader]="false"
     [modal]="true"
-    [style]="{ width: '680px' }"
+    [style]="{ width: 'min(680px, 94vw)' }"
     [draggable]="false"
     [breakpoints]="{ '640px': '94vw' }"
+    styleClass="client-dialog"
   >
-    <div class="p-fluid form-grid">
-      <div class="field">
-        <label for="cliente-nome">Nome</label
-        ><input
-          id="cliente-nome"
-          pInputText
-          type="text"
-          [(ngModel)]="clienteSelecionado.nome"
-          autocomplete="name"
-        />
+    <form class="client-form" (ngSubmit)="salvar()" novalidate>
+      <header class="client-form-header">
+        <div>
+          <span class="form-eyebrow">Cadastro <span aria-hidden="true">·</span> 01</span>
+          <h2>{{ editando ? 'Editar cliente' : 'Novo cliente' }}</h2>
+          <p>Preencha os dados para manter o cadastro da oficina atualizado.</p>
+        </div>
+        <button
+          class="form-close"
+          type="button"
+          aria-label="Fechar formulário"
+          [disabled]="salvando"
+          (click)="dialogVisivel = false"
+        ><i class="pi pi-times" aria-hidden="true"></i></button>
+      </header>
+
+      <div class="form-section-heading">
+        <strong>Dados pessoais</strong>
+        <span>4 campos</span>
       </div>
-      <div class="field">
-        <label for="cliente-email">E-mail</label
-        ><input
-          id="cliente-email"
-          pInputText
-          type="email"
-          [(ngModel)]="clienteSelecionado.email"
-          autocomplete="email"
-        />
+
+      <div class="form-grid">
+        <div class="field field--full">
+          <label for="cliente-nome">Nome completo <span aria-hidden="true">*</span></label>
+          <div class="input-with-icon">
+            <i class="pi pi-user" aria-hidden="true"></i>
+            <input
+            id="cliente-nome"
+            name="nome"
+            pInputText
+            type="text"
+            autocomplete="name"
+            maxlength="120"
+            [(ngModel)]="clienteSelecionado.nome"
+            [attr.aria-invalid]="formularioEnviado && (clienteSelecionado.nome.trim().length < 3 || clienteSelecionado.nome.trim().length > 120)"
+            aria-describedby="cliente-nome-error"
+            />
+          </div>
+          <small
+            *ngIf="formularioEnviado && (clienteSelecionado.nome.trim().length < 3 || clienteSelecionado.nome.trim().length > 120)"
+            id="cliente-nome-error"
+            class="field-error"
+            role="alert"
+          >Informe um nome entre 3 e 120 caracteres.</small>
+        </div>
+
+        <div class="field field--full">
+          <label for="cliente-email">E-mail <span class="optional-label">Opcional</span></label>
+          <div class="input-with-icon">
+            <i class="pi pi-envelope" aria-hidden="true"></i>
+            <input
+            id="cliente-email"
+            name="email"
+            pInputText
+            type="email"
+            autocomplete="email"
+            [(ngModel)]="clienteSelecionado.email"
+            [attr.aria-invalid]="formularioEnviado && !emailValido(clienteSelecionado.email)"
+            aria-describedby="cliente-email-error"
+            />
+          </div>
+          <small
+            *ngIf="formularioEnviado && !emailValido(clienteSelecionado.email)"
+            id="cliente-email-error"
+            class="field-error"
+            role="alert"
+          >Informe um e-mail válido ou deixe o campo vazio.</small>
+        </div>
+
+        <div class="field">
+          <label for="cliente-telefone">Telefone <span aria-hidden="true">*</span></label>
+          <div class="input-with-icon">
+            <i class="pi pi-phone" aria-hidden="true"></i>
+            <input
+            id="cliente-telefone"
+            name="telefone"
+            pInputText
+            type="tel"
+            inputmode="tel"
+            autocomplete="tel"
+            placeholder="(11) 99999-9999"
+            [(ngModel)]="clienteSelecionado.telefone"
+            (blur)="clienteSelecionado.telefone = formatarTelefone(clienteSelecionado.telefone)"
+            [attr.aria-invalid]="formularioEnviado && !telefoneValido()"
+            aria-describedby="cliente-telefone-help cliente-telefone-error"
+            />
+          </div>
+          <small id="cliente-telefone-help" class="field-help">Inclua DDD e número com 9 dígitos.</small>
+          <small
+            *ngIf="formularioEnviado && !telefoneValido()"
+            id="cliente-telefone-error"
+            class="field-error"
+            role="alert"
+          >Informe DDD e telefone com 9 dígitos.</small>
+        </div>
+
+        <div class="field">
+          <label for="cliente-cpf">CPF <span aria-hidden="true">*</span></label>
+          <div class="input-with-icon">
+            <i class="pi pi-id-card" aria-hidden="true"></i>
+            <input
+            id="cliente-cpf"
+            name="cpf"
+            pInputText
+            type="text"
+            inputmode="numeric"
+            autocomplete="off"
+            maxlength="14"
+            placeholder="000.000.000-00"
+            [(ngModel)]="clienteSelecionado.cpf"
+            [attr.aria-invalid]="formularioEnviado && (!cpfTemOnzeDigitos() || !cpfInformadoValido())"
+            aria-describedby="cliente-cpf-help cliente-cpf-error"
+            />
+          </div>
+          <small id="cliente-cpf-help" class="field-help">CPF é obrigatório</small>
+          <small
+            *ngIf="formularioEnviado && !cpfTemOnzeDigitos()"
+            id="cliente-cpf-error"
+            class="field-error"
+            role="alert"
+          >Informe os 11 dígitos do CPF.</small>
+          <small
+            *ngIf="formularioEnviado && cpfTemOnzeDigitos() && !cpfInformadoValido()"
+            class="field-error"
+            role="alert"
+          >Confira se o CPF é válido.</small>
+        </div>
       </div>
-      <div class="field">
-        <label for="cliente-telefone">Telefone</label
-        ><input
-          id="cliente-telefone"
-          pInputText
-          type="tel"
-          [(ngModel)]="clienteSelecionado.telefone"
-          autocomplete="tel"
-        />
-      </div>
-      <div class="field">
-        <label for="cliente-cpf">CPF</label
-        ><input
-          id="cliente-cpf"
-          pInputText
-          type="text"
-          [(ngModel)]="clienteSelecionado.cpf"
-          inputmode="numeric"
-        />
-      </div>
-    </div>
+    </form>
+
     <ng-template pTemplate="footer">
+      <div class="dialog-divider" aria-hidden="true"></div>
       <div class="dialog-actions">
         <p-button
           label="Cancelar"
           icon="pi pi-times"
-          [text]="true"
-          severity="secondary"
+          [outlined]="true"
+          styleClass="cancel-button"
+          [disabled]="salvando"
           (onClick)="dialogVisivel = false"
-        /><p-button
-          [label]="editando ? 'Atualizar' : 'Salvar'"
+        />
+        <p-button
+          [label]="editando ? 'Salvar alterações' : 'Cadastrar cliente'"
           icon="pi pi-check"
+          [loading]="salvando"
           (onClick)="salvar()"
         />
       </div>

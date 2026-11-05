@@ -1,26 +1,22 @@
 <aside
   class="sidebar"
   [class.sidebar--open]="aberto"
+  id="navegacao-principal"
   aria-label="Navegação principal"
 >
   <div class="sidebar-header">
     <span class="sidebar-header__icon" aria-hidden="true"
       ><i class="pi pi-wrench"></i></span
-    ><span>Oficina</span>
+    ><span class="sidebar-brand"><strong>OficinaTech</strong><small>GESTÃO DE OFICINA</small></span>
   </div>
-  <div class="sidebar-user">
-    <i class="pi pi-user-circle user-icon" aria-hidden="true"></i>
-    <div class="user-info">
-      <strong>{{ nome }}</strong
-      ><span>{{ perfil }}</span>
-    </div>
-  </div>
-  <nav class="sidebar-nav">
+  <p class="sidebar-section-label">Principal</p>
+  <nav class="sidebar-nav" aria-label="Seções do sistema">
     <a
       *ngFor="let item of menuItems"
       [routerLink]="item.routerLink"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: item.routerLink === '/dashboard' }"
+      ariaCurrentWhenActive="page"
       class="nav-item"
       (click)="onNavigate()"
       ><i [class]="item.icon" aria-hidden="true"></i
@@ -28,6 +24,13 @@
     >
   </nav>
   <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <i class="pi pi-user user-icon" aria-hidden="true"></i>
+      <div class="user-info">
+        <strong>{{ nome }}</strong>
+        <span>{{ perfil }}</span>
+      </div>
+    </div>
     <button class="logout-btn" type="button" (click)="logout()">
       <i class="pi pi-sign-out" aria-hidden="true"></i><span>Sair</span>
     </button>
