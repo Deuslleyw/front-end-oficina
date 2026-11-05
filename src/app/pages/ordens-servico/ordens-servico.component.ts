@@ -205,8 +205,8 @@ export class OrdensServicoComponent implements OnInit {
 
   confirmarCancelamento(ordem: OrdemServico): void {
     this.confirmationService.confirm({
-      message: `Deseja cancelar a ordem #${ordem.id} — ${ordem.descricao}?`,
-      header: 'Cancelar Ordem',
+      message: `Deseja cancelar a ordem #${ordem.id} — ${ordem.veiculo?.modelo || ordem.veiculo?.marca || 'veículo'} (${ordem.veiculo?.placa || 'sem placa'})?`,
+      header: 'Cancelar ordem',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Sim, cancelar',
       rejectLabel: 'Não',
@@ -264,6 +264,15 @@ export class OrdensServicoComponent implements OnInit {
       CANCELADA: 'Cancelada',
     };
     return map[status];
+  }
+
+  iniciaisCliente(nome: string): string {
+    const partes = nome.trim().split(/\s+/).filter(Boolean);
+    if (partes.length === 0) return '—';
+    if (partes.length === 1) {
+      return partes[0].slice(0, 2).toLocaleUpperCase('pt-BR');
+    }
+    return `${partes[0][0]}${partes[partes.length - 1][0]}`.toLocaleUpperCase('pt-BR');
   }
 
   get ordensFiltradas(): OrdemServico[] {

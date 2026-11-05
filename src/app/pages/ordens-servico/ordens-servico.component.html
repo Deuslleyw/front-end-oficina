@@ -1,8 +1,11 @@
 <section class="ordens-page" aria-labelledby="ordens-title">
-  <p-toast /><p-confirmDialog />
+  <p-toast /><p-confirmDialog styleClass="os-confirm-dialog" />
   <header class="page-header">
     <div>
-      <span class="page-eyebrow">Operação</span>
+      <nav class="page-breadcrumb" aria-label="Localização">
+        <span>OficinaTech</span><i class="pi pi-angle-right" aria-hidden="true"></i><span>Operação</span>
+      </nav>
+      <span class="page-eyebrow">Gestão da oficina</span>
       <h1 id="ordens-title">Ordens de serviço</h1>
       <p>Acompanhe o fluxo de atendimento da oficina.</p>
     </div>
@@ -16,26 +19,39 @@
         pInputText
         type="search"
         [(ngModel)]="busca"
-        placeholder="Buscar por descrição, cliente, placa ou status"
+        placeholder="Buscar por serviço, cliente, placa ou status"
         aria-label="Buscar ordens de serviço" /></label
-    ><span class="result-count" aria-live="polite"
-      >{{ ordensFiltradas.length }}
-      {{ ordensFiltradas.length === 1 ? "ordem" : "ordens" }}</span
-    >
+    ><div class="toolbar-meta">
+      <span class="result-count" aria-live="polite">
+        <strong>{{ ordensFiltradas.length.toString().padStart(2, '0') }}</strong>
+        {{ ordensFiltradas.length === 1 ? 'ordem encontrada' : 'ordens encontradas' }}
+      </span>
+      <p-button
+        icon="pi pi-refresh"
+        [text]="true"
+        severity="secondary"
+        aria-label="Atualizar lista de ordens"
+        [disabled]="carregando"
+        (onClick)="listar()"
+      />
+    </div>
   </div>
   <div class="table-card">
+    <div class="list-heading">
+      <span>Ordens registradas</span>
+      <span>Serviços e clientes</span>
+    </div>
     <p-table
       [value]="ordensFiltradas"
       [loading]="carregando"
       [paginator]="true"
       [rows]="10"
-      styleClass="p-datatable-striped"
       [rowHover]="true"
       responsiveLayout="scroll"
+      styleClass="orders-table"
       ><ng-template pTemplate="header"
         ><tr>
-          <th scope="col">Nº</th>
-          <th scope="col">Detalhes</th>
+          <th scope="col">Exibir ordem</th>
           <th scope="col">Cliente</th>
           <th scope="col">Veículo</th>
           <th scope="col">Valor</th>
@@ -45,20 +61,33 @@
         </tr></ng-template
       ><ng-template pTemplate="body" let-ordem
         ><tr>
-          <td data-label="Nº">#{{ ordem.id }}</td>
-          <td data-label="Detalhes">
-            <p-button
-              icon="pi pi-eye"
-              [rounded]="true"
-              [text]="true"
-              severity="secondary"
-              aria-label="Ver detalhes da ordem"
-              (onClick)="abrirDetalhes(ordem)"
-            />
+          <td data-label="Exibir ordem">
+            <div class="order-identity">
+              <span class="order-number">#{{ ordem.id }}</span>
+              <p-button
+                icon="pi pi-eye"
+                [rounded]="true"
+                [text]="true"
+                severity="secondary"
+                [ariaLabel]="'Exibir detalhes da ordem ' + ordem.id"
+                (onClick)="abrirDetalhes(ordem)"
+              />
+            </div>
           </td>
-          <td data-label="Cliente">{{ ordem.cliente?.nome }}</td>
+          <td data-label="Cliente">
+            <div class="order-owner">
+              <span class="owner-initials" aria-hidden="true">{{ iniciaisCliente(ordem.cliente?.nome || '') }}</span>
+              <span>{{ ordem.cliente?.nome || '—' }}</span>
+            </div>
+          </td>
           <td data-label="Veículo">
-            {{ ordem.veiculo?.modelo }} — {{ ordem.veiculo?.placa }}
+            <div class="order-vehicle">
+              <span class="vehicle-avatar" aria-hidden="true"><i class="pi pi-car"></i></span>
+              <span>
+                <strong>{{ ordem.veiculo?.marca }} {{ ordem.veiculo?.modelo }}</strong>
+                <small>{{ ordem.veiculo?.ano }} · {{ ordem.veiculo?.placa }}</small>
+              </span>
+            </div>
           </td>
           <td data-label="Valor">{{ ordem.valor | currency: "BRL" }}</td>
           <td data-label="Status">
@@ -76,7 +105,7 @@
                 icon="pi pi-pencil"
                 [rounded]="true"
                 [text]="true"
-                severity="info"
+                severity="secondary"
                 aria-label="Editar ordem"
                 [disabled]="!podeEditar(ordem.status)"
                 (onClick)="abrirEdicao(ordem)"
@@ -95,44 +124,40 @@
           </td></tr></ng-template
       ><ng-template pTemplate="emptymessage"
         ><tr>
-          <td colspan="8" class="empty-state">Nenhuma ordem encontrada.</td>
+          <td colspan="7" class="empty-state">
+            <i class="pi pi-clipboard" aria-hidden="true"></i>
+            <strong>Nenhuma ordem encontrada</strong>
+            <span>Cadastre uma ordem ou ajuste a busca.</span>
+          </td>
         </tr></ng-template
+      ><ng-template pTemplate="paginatorleft" let-state
+        ><span class="paginator-total" aria-live="polite">
+          Mostrando {{ state.totalRecords === 0 ? 0 : state.first + 1 }}–{{ state.first + state.rows < state.totalRecords ? state.first + state.rows : state.totalRecords }} de {{ state.totalRecords }} ordens
+        </span></ng-template
       ></p-table
     >
   </div>
   <p-dialog
     [(visible)]="dialogDetalhesVisivel"
-    header="Detalhes da ordem"
+    header="Ordem de serviço"
     [modal]="true"
     [style]="{ width: '620px' }"
     [draggable]="false"
     [breakpoints]="{ '640px': '94vw' }"
     ><div class="detalhes" *ngIf="ordemDetalhes">
       <div class="detalhe-header">
-        <span class="ordem-id">Ordem #{{ ordemDetalhes.id }}</span
-        ><p-tag
-          [value]="getStatusLabel(ordemDetalhes.status)"
-          [severity]="getSeverity(ordemDetalhes.status)"
-        />
+        <span class="ordem-id">Ordem #{{ ordemDetalhes.id }}</span>
+        <div class="detalhe-status-valor">
+          <p-tag
+            [value]="getStatusLabel(ordemDetalhes.status)"
+            [severity]="getSeverity(ordemDetalhes.status)"
+          /><span class="campo-valor">{{ ordemDetalhes.valor | currency: "BRL" }}</span>
+        </div>
       </div>
       <div class="detalhe-secao">
         <span class="secao-label">Descrição</span>
         <div class="campo-box">
           <span>{{ ordemDetalhes.descricao }}</span>
-        </div>
-      </div>
-      <div class="detalhe-row">
-        <div class="campo-box">
-          <span class="campo-label">Valor</span
-          ><span class="campo-valor">{{
-            ordemDetalhes.valor | currency: "BRL"
-          }}</span>
-        </div>
-        <div class="campo-box">
-          <span class="campo-label">Data de abertura</span
-          ><span class="campo-valor">{{
-            ordemDetalhes.dataAbertura | date: "dd/MM/yyyy HH:mm"
-          }}</span>
         </div>
       </div>
       <div class="detalhe-secao">
@@ -179,6 +204,12 @@
             <span class="campo-label">Ano</span
             ><span class="campo-valor">{{ ordemDetalhes.veiculo?.ano }}</span>
           </div>
+          <div class="campo-box">
+            <span class="campo-label">Data de abertura</span
+            ><span class="campo-valor">{{
+              ordemDetalhes.dataAbertura | date: "dd/MM/yyyy HH:mm"
+            }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -198,90 +229,140 @@
         /></div></ng-template></p-dialog
   ><p-dialog
     [(visible)]="dialogFormVisivel"
-    [header]="editando ? 'Editar Ordem' : 'Nova Ordem'"
+    [showHeader]="false"
     [modal]="true"
-    [style]="{ width: '760px' }"
+    [style]="{ width: 'min(760px, 94vw)' }"
     [draggable]="false"
     [breakpoints]="{ '640px': '94vw' }"
-    ><div class="p-fluid form-grid">
-      <div class="field full-width">
-        <label for="ordem-descricao">Descrição</label
-        ><textarea
-          id="ordem-descricao"
-          pInputTextarea
-          [(ngModel)]="ordemSelecionada.descricao"
-          rows="5"
-          [autoResize]="true"
-          placeholder="Descreva os serviços, sintomas e observações"
-        ></textarea>
+    styleClass="client-dialog vehicle-dialog order-dialog"
+    ><div class="order-form-content">
+      <header class="client-form-header">
+        <div>
+          <span class="form-eyebrow">Operação <span aria-hidden="true">·</span> 03</span>
+          <h2>{{ editando ? 'Editar ordem de serviço' : 'Nova ordem de serviço' }}</h2>
+          <p>Registre o serviço e vincule-o ao cliente e veículo corretos.</p>
+        </div>
+        <button
+          class="form-close"
+          type="button"
+          aria-label="Fechar formulário"
+          (click)="dialogFormVisivel = false"
+        ><i class="pi pi-times" aria-hidden="true"></i></button>
+      </header>
+
+      <div class="form-section-heading">
+        <strong>Dados da ordem</strong>
+        <span>5 campos obrigatórios</span>
       </div>
-      <div class="field">
-        <label for="ordem-valor">Valor</label
-        ><p-inputNumber
-          inputId="ordem-valor"
-          [(ngModel)]="ordemSelecionada.valor"
-          mode="currency"
-          currency="BRL"
-          locale="pt-BR"
-          styleClass="w-full"
-        />
-      </div>
-      <div class="field">
-        <label for="ordem-status">Status</label
-        ><p-dropdown
-          inputId="ordem-status"
-          [options]="statusOptions"
-          [(ngModel)]="ordemSelecionada.status"
-          optionLabel="label"
-          optionValue="value"
-          styleClass="w-full"
-          panelStyleClass="comfortable-dropdown-panel"
-          appendTo="body"
-        />
-      </div>
-      <div class="field full-width">
-        <label for="ordem-cliente">Cliente</label
-        ><p-dropdown
-          inputId="ordem-cliente"
-          [options]="clientes"
-          [(ngModel)]="ordemSelecionada.clienteId"
-          optionLabel="nome"
-          optionValue="id"
-          placeholder="Selecione o cliente"
-          [filter]="true"
-          filterPlaceholder="Buscar cliente..."
-          styleClass="w-full"
-          (onChange)="onClienteChange()"
-          panelStyleClass="comfortable-dropdown-panel"
-          appendTo="body"
-        />
-      </div>
-      <div class="field full-width">
-        <label for="ordem-veiculo">Veículo</label
-        ><p-dropdown
-          inputId="ordem-veiculo"
-          [options]="veiculosDoCliente"
-          [(ngModel)]="ordemSelecionada.veiculoId"
-          optionLabel="modelo"
-          optionValue="id"
-          placeholder="Selecione o veículo"
-          styleClass="w-full"
-          [disabled]="!ordemSelecionada.clienteId"
-          panelStyleClass="comfortable-dropdown-panel"
-          appendTo="body"
-        />
+
+      <div class="form-grid">
+        <div class="field field--full">
+          <label for="ordem-descricao">Descrição do serviço <span aria-hidden="true">*</span></label>
+          <div class="input-with-icon textarea-with-icon">
+            <i class="pi pi-clipboard" aria-hidden="true"></i>
+            <textarea
+              id="ordem-descricao"
+              name="descricao"
+              pInputTextarea
+              [(ngModel)]="ordemSelecionada.descricao"
+              rows="4"
+              minlength="3"
+              maxlength="700"
+              [autoResize]="true"
+              placeholder="Descreva os serviços, sintomas e observações"
+              aria-describedby="ordem-descricao-help"
+            ></textarea>
+          </div>
+          <small id="ordem-descricao-help" class="field-help">De 3 a 700 caracteres.</small>
+        </div>
+
+        <div class="field">
+          <label for="ordem-valor">Valor <span aria-hidden="true">*</span></label>
+          <div class="input-with-icon number-with-icon">
+            <i class="pi pi-wallet" aria-hidden="true"></i>
+            <p-inputNumber
+              inputId="ordem-valor"
+              [(ngModel)]="ordemSelecionada.valor"
+              mode="currency"
+              currency="BRL"
+              locale="pt-BR"
+              styleClass="w-full"
+            />
+          </div>
+          <small class="field-help">Informe um valor maior que zero.</small>
+        </div>
+
+        <div class="field">
+          <label for="ordem-status">Status <span aria-hidden="true">*</span></label>
+          <div class="input-with-icon dropdown-with-icon">
+            <i class="pi pi-circle" aria-hidden="true"></i>
+            <p-dropdown
+              inputId="ordem-status"
+              [options]="statusOptions"
+              [(ngModel)]="ordemSelecionada.status"
+              optionLabel="label"
+              optionValue="value"
+              styleClass="w-full vehicle-dropdown"
+              panelStyleClass="comfortable-dropdown-panel"
+              appendTo="body"
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="ordem-cliente">Cliente <span aria-hidden="true">*</span></label>
+          <div class="input-with-icon dropdown-with-icon">
+            <i class="pi pi-user" aria-hidden="true"></i>
+            <p-dropdown
+              inputId="ordem-cliente"
+              [options]="clientes"
+              [(ngModel)]="ordemSelecionada.clienteId"
+              optionLabel="nome"
+              optionValue="id"
+              placeholder="Selecione o cliente"
+              [filter]="true"
+              filterPlaceholder="Buscar cliente..."
+              styleClass="w-full vehicle-dropdown"
+              (onChange)="onClienteChange()"
+              panelStyleClass="comfortable-dropdown-panel"
+              appendTo="body"
+            />
+          </div>
+          <small class="field-help">O veículo será filtrado pelo cliente.</small>
+        </div>
+
+        <div class="field">
+          <label for="ordem-veiculo">Veículo <span aria-hidden="true">*</span></label>
+          <div class="input-with-icon dropdown-with-icon">
+            <i class="pi pi-car" aria-hidden="true"></i>
+            <p-dropdown
+              inputId="ordem-veiculo"
+              [options]="veiculosDoCliente"
+              [(ngModel)]="ordemSelecionada.veiculoId"
+              optionLabel="modelo"
+              optionValue="id"
+              placeholder="Selecione o veículo"
+              styleClass="w-full vehicle-dropdown"
+              [disabled]="!ordemSelecionada.clienteId"
+              panelStyleClass="comfortable-dropdown-panel"
+              appendTo="body"
+            />
+          </div>
+          <small class="field-help">Escolha um veículo do cliente selecionado.</small>
+        </div>
       </div>
     </div>
     <ng-template pTemplate="footer"
-      ><div class="dialog-footer">
+      ><div class="dialog-divider" aria-hidden="true"></div>
+      <div class="dialog-actions">
         <p-button
           label="Cancelar"
           icon="pi pi-times"
-          severity="secondary"
           [outlined]="true"
+          styleClass="cancel-button"
           (onClick)="dialogFormVisivel = false"
         /><p-button
-          [label]="editando ? 'Atualizar' : 'Salvar'"
+          [label]="editando ? 'Salvar alterações' : 'Cadastrar ordem'"
           icon="pi pi-check"
           (onClick)="salvar()"
         /></div></ng-template

@@ -1,63 +1,98 @@
 <section class="veiculos-page" aria-labelledby="veiculos-title">
-  <p-toast /><p-confirmDialog />
+  <p-toast />
+  <p-confirmDialog />
+
   <header class="page-header">
     <div>
-      <span class="page-eyebrow">Cadastros</span>
+      <nav class="page-breadcrumb" aria-label="Localização">
+        <span>OficinaTech</span><i class="pi pi-angle-right" aria-hidden="true"></i><span>Cadastros</span>
+      </nav>
+      <span class="page-eyebrow">Gestão da oficina</span>
       <h1 id="veiculos-title">Veículos</h1>
-      <p>Gerencie os veículos da oficina.</p>
+      <p>Consulte os veículos cadastrados e seus proprietários.</p>
     </div>
     <p-button label="Novo veículo" icon="pi pi-plus" (onClick)="abrirNovo()" />
   </header>
+
   <div class="page-toolbar">
-    <label class="search-field" for="busca-veiculos"
-      ><i class="pi pi-search" aria-hidden="true"></i
-      ><input
+    <label class="search-field" for="busca-veiculos">
+      <i class="pi pi-search" aria-hidden="true"></i>
+      <input
         id="busca-veiculos"
         pInputText
         type="search"
         [(ngModel)]="busca"
         placeholder="Buscar por marca, modelo, placa ou cliente"
-        aria-label="Buscar veículos" /></label
-    ><span class="result-count" aria-live="polite"
-      >{{ veiculosFiltrados.length }}
-      {{ veiculosFiltrados.length === 1 ? "veículo" : "veículos" }}</span
-    >
+        aria-label="Buscar por marca, modelo, placa ou cliente"
+      />
+    </label>
+    <div class="toolbar-meta">
+      <span class="result-count" aria-live="polite">
+        <strong>{{ veiculosFiltrados.length.toString().padStart(2, '0') }}</strong>
+        {{ veiculosFiltrados.length === 1 ? 'veículo encontrado' : 'veículos encontrados' }}
+      </span>
+      <p-button
+        icon="pi pi-refresh"
+        [text]="true"
+        severity="secondary"
+        aria-label="Atualizar lista de veículos"
+        [disabled]="carregando"
+        (onClick)="listar()"
+      />
+    </div>
   </div>
+
   <div class="table-card">
+    <div class="list-heading">
+      <span>Frota cadastrada</span>
+      <span>Veículos e proprietários</span>
+    </div>
     <p-table
       [value]="veiculosFiltrados"
       [loading]="carregando"
       [paginator]="true"
       [rows]="10"
-      styleClass="p-datatable-striped"
       [rowHover]="true"
       responsiveLayout="scroll"
-      ><ng-template pTemplate="header"
-        ><tr>
-          <th scope="col">Marca</th>
-          <th scope="col">Modelo</th>
+      styleClass="vehicles-table"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th scope="col">Veículo</th>
           <th scope="col">Placa</th>
-          <th scope="col">Ano</th>
-          <th scope="col">Cliente</th>
+          <th scope="col">Proprietário</th>
           <th scope="col" class="actions-column">Ações</th>
-        </tr></ng-template
-      ><ng-template pTemplate="body" let-veiculo
-        ><tr>
-          <td data-label="Marca">{{ veiculo.marca }}</td>
-          <td data-label="Modelo">{{ veiculo.modelo }}</td>
-          <td data-label="Placa">{{ veiculo.placa }}</td>
-          <td data-label="Ano">{{ veiculo.ano }}</td>
-          <td data-label="Cliente">{{ veiculo.clienteNome }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-veiculo>
+        <tr>
+          <td data-label="Veículo">
+            <div class="vehicle-identity">
+              <span class="vehicle-avatar" aria-hidden="true"><i class="pi pi-car"></i></span>
+              <span>
+                <strong>{{ veiculo.marca }} {{ veiculo.modelo }}</strong>
+                <small>{{ veiculo.ano }} · {{ veiculo.marca }}</small>
+              </span>
+            </div>
+          </td>
+          <td data-label="Placa"><span class="vehicle-plate">{{ veiculo.placa }}</span></td>
+          <td data-label="Proprietário">
+            <div class="vehicle-owner">
+              <span class="owner-initials" aria-hidden="true">{{ iniciaisCliente(veiculo.clienteNome || '') }}</span>
+              <span>{{ veiculo.clienteNome || '—' }}</span>
+            </div>
+          </td>
           <td data-label="Ações">
             <div class="acoes">
               <p-button
                 icon="pi pi-pencil"
                 [rounded]="true"
                 [text]="true"
-                severity="info"
+                severity="secondary"
                 aria-label="Editar veículo"
                 (onClick)="abrirEdicao(veiculo)"
-              /><p-button
+              />
+              <p-button
                 icon="pi pi-trash"
                 [rounded]="true"
                 [text]="true"
@@ -66,88 +101,187 @@
                 (onClick)="confirmarDelete(veiculo)"
               />
             </div>
-          </td></tr></ng-template
-      ><ng-template pTemplate="emptymessage"
-        ><tr>
-          <td colspan="6" class="empty-state">Nenhum veículo encontrado.</td>
-        </tr></ng-template
-      ></p-table
-    >
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4" class="empty-state">
+            <i class="pi pi-car" aria-hidden="true"></i>
+            <strong>Nenhum veículo encontrado</strong>
+            <span>Cadastre um veículo ou ajuste a busca.</span>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="paginatorleft" let-state>
+        <span class="paginator-total" aria-live="polite">
+          Mostrando {{ state.totalRecords === 0 ? 0 : state.first + 1 }}–{{ state.first + state.rows < state.totalRecords ? state.first + state.rows : state.totalRecords }} de {{ state.totalRecords }} veículos
+        </span>
+      </ng-template>
+    </p-table>
   </div>
+
   <p-dialog
     [(visible)]="dialogVisivel"
-    [header]="editando ? 'Editar Veículo' : 'Novo Veículo'"
+    [showHeader]="false"
     [modal]="true"
-    [style]="{ width: '680px' }"
+    [style]="{ width: 'min(680px, 94vw)' }"
     [draggable]="false"
     [breakpoints]="{ '640px': '94vw' }"
-    ><div class="p-fluid form-grid">
-      <div class="field">
-        <label for="veiculo-marca">Marca</label
-        ><input
-          id="veiculo-marca"
-          pInputText
-          type="text"
-          [(ngModel)]="veiculoSelecionado.marca"
-        />
+    styleClass="client-dialog vehicle-dialog"
+  >
+    <form class="vehicle-form" (ngSubmit)="salvar()" novalidate>
+      <header class="client-form-header">
+        <div>
+          <span class="form-eyebrow">Cadastro <span aria-hidden="true">·</span> 02</span>
+          <h2>{{ editando ? 'Editar veículo' : 'Novo veículo' }}</h2>
+          <p>Informe os dados do veículo e vincule-o a um cliente.</p>
+        </div>
+        <button
+          class="form-close"
+          type="button"
+          aria-label="Fechar formulário"
+          [disabled]="salvando"
+          (click)="dialogVisivel = false"
+        ><i class="pi pi-times" aria-hidden="true"></i></button>
+      </header>
+
+      <div class="form-section-heading">
+        <strong>Dados do veículo</strong>
+        <span>5 campos obrigatórios</span>
       </div>
-      <div class="field">
-        <label for="veiculo-modelo">Modelo</label
-        ><input
-          id="veiculo-modelo"
-          pInputText
-          type="text"
-          [(ngModel)]="veiculoSelecionado.modelo"
-        />
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="veiculo-marca">Marca <span aria-hidden="true">*</span></label>
+          <div class="input-with-icon">
+            <i class="pi pi-building" aria-hidden="true"></i>
+            <input
+              id="veiculo-marca"
+              name="marca"
+              pInputText
+              type="text"
+              autocomplete="off"
+              minlength="3"
+              maxlength="50"
+              [(ngModel)]="veiculoSelecionado.marca"
+              [attr.aria-invalid]="formularioEnviado && campoMarcaInvalido()"
+              aria-describedby="veiculo-marca-help veiculo-marca-error"
+            />
+          </div>
+          <small id="veiculo-marca-help" class="field-help">De 3 a 50 caracteres.</small>
+          <small *ngIf="formularioEnviado && campoMarcaInvalido()" id="veiculo-marca-error" class="field-error" role="alert">Informe uma marca entre 3 e 50 caracteres.</small>
+        </div>
+
+        <div class="field">
+          <label for="veiculo-modelo">Modelo <span aria-hidden="true">*</span></label>
+          <div class="input-with-icon">
+            <i class="pi pi-car" aria-hidden="true"></i>
+            <input
+              id="veiculo-modelo"
+              name="modelo"
+              pInputText
+              type="text"
+              autocomplete="off"
+              minlength="3"
+              maxlength="50"
+              [(ngModel)]="veiculoSelecionado.modelo"
+              [attr.aria-invalid]="formularioEnviado && campoModeloInvalido()"
+              aria-describedby="veiculo-modelo-help veiculo-modelo-error"
+            />
+          </div>
+          <small id="veiculo-modelo-help" class="field-help">De 3 a 50 caracteres.</small>
+          <small *ngIf="formularioEnviado && campoModeloInvalido()" id="veiculo-modelo-error" class="field-error" role="alert">Informe um modelo entre 3 e 50 caracteres.</small>
+        </div>
+
+        <div class="field">
+          <label for="veiculo-placa">Placa <span aria-hidden="true">*</span></label>
+          <div class="input-with-icon">
+            <i class="pi pi-id-card" aria-hidden="true"></i>
+            <input
+              id="veiculo-placa"
+              name="placa"
+              pInputText
+              type="text"
+              autocomplete="off"
+              minlength="7"
+              maxlength="8"
+              [(ngModel)]="veiculoSelecionado.placa"
+              [attr.aria-invalid]="formularioEnviado && campoPlacaInvalida()"
+              aria-describedby="veiculo-placa-help veiculo-placa-error"
+            />
+          </div>
+          <small id="veiculo-placa-help" class="field-help">Informe de 7 a 8 caracteres.</small>
+          <small *ngIf="formularioEnviado && campoPlacaInvalida()" id="veiculo-placa-error" class="field-error" role="alert">A placa deve ter de 7 a 8 caracteres.</small>
+        </div>
+
+        <div class="field">
+          <label for="veiculo-ano">Ano <span aria-hidden="true">*</span></label>
+          <div class="input-with-icon">
+            <i class="pi pi-calendar" aria-hidden="true"></i>
+            <input
+              id="veiculo-ano"
+              name="ano"
+              pInputText
+              type="text"
+              inputmode="numeric"
+              maxlength="4"
+              placeholder="2022"
+              [(ngModel)]="veiculoSelecionado.ano"
+              [attr.aria-invalid]="formularioEnviado && campoAnoInvalido()"
+              aria-describedby="veiculo-ano-help veiculo-ano-error"
+            />
+          </div>
+          <small id="veiculo-ano-help" class="field-help">Ano entre 1900 e 2100.</small>
+          <small *ngIf="formularioEnviado && campoAnoInvalido()" id="veiculo-ano-error" class="field-error" role="alert">Informe um ano válido entre 1900 e 2100.</small>
+        </div>
+
+        <div class="field field--full">
+          <label for="veiculo-cliente">Cliente proprietário <span aria-hidden="true">*</span></label>
+          <div class="input-with-icon dropdown-with-icon" [class.input-invalid]="formularioEnviado && campoClienteInvalido()">
+            <i class="pi pi-user" aria-hidden="true"></i>
+            <p-dropdown
+              inputId="veiculo-cliente"
+              name="clienteId"
+              [options]="clientes"
+              [(ngModel)]="veiculoSelecionado.clienteId"
+              optionLabel="nome"
+              optionValue="id"
+              placeholder="Selecione o cliente"
+              [filter]="true"
+              filterPlaceholder="Buscar cliente..."
+              [attr.aria-invalid]="formularioEnviado && campoClienteInvalido()"
+              aria-describedby="veiculo-cliente-help veiculo-cliente-error"
+              styleClass="w-full vehicle-dropdown"
+              panelStyleClass="comfortable-dropdown-panel"
+              appendTo="body"
+            />
+          </div>
+          <small id="veiculo-cliente-help" class="field-help">Selecione um cliente cadastrado.</small>
+          <small *ngIf="formularioEnviado && campoClienteInvalido()" id="veiculo-cliente-error" class="field-error" role="alert">Selecione o cliente proprietário do veículo.</small>
+        </div>
       </div>
-      <div class="field">
-        <label for="veiculo-placa">Placa</label
-        ><input
-          id="veiculo-placa"
-          pInputText
-          type="text"
-          [(ngModel)]="veiculoSelecionado.placa"
-        />
-      </div>
-      <div class="field">
-        <label for="veiculo-ano">Ano</label
-        ><input
-          id="veiculo-ano"
-          pInputText
-          type="number"
-          [(ngModel)]="veiculoSelecionado.ano"
-          inputmode="numeric"
-        />
-      </div>
-      <div class="field full-width">
-        <label for="veiculo-cliente">Cliente</label
-        ><p-dropdown
-          inputId="veiculo-cliente"
-          [options]="clientes"
-          [(ngModel)]="veiculoSelecionado.clienteId"
-          optionLabel="nome"
-          optionValue="id"
-          placeholder="Selecione o cliente"
-          [filter]="true"
-          filterPlaceholder="Buscar cliente..."
-          styleClass="w-full"
-          panelStyleClass="comfortable-dropdown-panel"
-          appendTo="body"
-        />
-      </div>
-    </div>
-    <ng-template pTemplate="footer"
-      ><div class="dialog-actions">
+    </form>
+
+    <ng-template pTemplate="footer">
+      <div class="dialog-divider" aria-hidden="true"></div>
+      <div class="dialog-actions">
         <p-button
           label="Cancelar"
           icon="pi pi-times"
-          [text]="true"
-          severity="secondary"
+          [outlined]="true"
+          styleClass="cancel-button"
+          [disabled]="salvando"
           (onClick)="dialogVisivel = false"
-        /><p-button
-          [label]="editando ? 'Atualizar' : 'Salvar'"
+        />
+        <p-button
+          [label]="editando ? 'Atualizar veículo' : 'Salvar veículo'"
           icon="pi pi-check"
+          [loading]="salvando"
+          [disabled]="salvando"
           (onClick)="salvar()"
-        /></div></ng-template
-  ></p-dialog>
+        />
+      </div>
+    </ng-template>
+  </p-dialog>
 </section>

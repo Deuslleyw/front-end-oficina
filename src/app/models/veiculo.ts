@@ -3,7 +3,15 @@ export interface Veiculo {
   marca: string;
   modelo: string;
   placa: string;
-  ano: number;
+  ano: string;
   clienteId: number;
   clienteNome?: string;
+}
+
+export interface VeiculoRequest {
+  marca: string;
+  modelo: string;
+  placa: string;
+  ano: string;
+  clienteId: number;
 }

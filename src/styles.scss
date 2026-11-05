@@ -46,39 +46,129 @@ body {
 .comfortable-dropdown-panel {
   min-width: 100%;
   overflow: hidden;
-  border: 1px solid var(--surface-border);
-  border-radius: 6px;
-  box-shadow: 0 0.8rem 2rem rgb(0 0 0 / 28%);
+  color: #f3f2f2;
+  border: 1px solid rgb(243 242 242 / 20%);
+  border-radius: 0;
+  background: #201e1d;
+  box-shadow: 0 0.8rem 2rem rgb(0 0 0 / 40%);
 }
 
-.comfortable-dropdown-panel .p-dropdown-filter-container {
+.p-dropdown-panel.comfortable-dropdown-panel .p-dropdown-filter-container {
   padding: 0.55rem;
-  border-bottom: 1px solid var(--surface-border);
-  background: var(--surface-card);
+  border-bottom: 1px solid rgb(243 242 242 / 15%);
+  background: #201e1d;
 }
 
-.comfortable-dropdown-panel .p-dropdown-filter {
+.p-dropdown-panel.comfortable-dropdown-panel .p-dropdown-filter {
   min-height: 2.45rem;
   padding: 0.6rem 0.75rem;
-  border-radius: 5px;
+  color: #f3f2f2;
+  border: 1px solid rgb(243 242 242 / 20%);
+  border-radius: 0;
+  background: #151312;
 }
 
-.comfortable-dropdown-panel .p-dropdown-items {
+.p-dropdown-panel.comfortable-dropdown-panel .p-dropdown-filter:enabled:focus {
+  border-color: #ec3013;
+  box-shadow: 0 0 0 2px rgb(236 48 19 / 20%);
+}
+
+.p-dropdown-panel.comfortable-dropdown-panel .p-dropdown-filter::placeholder {
+  color: rgb(243 242 242 / 48%);
+}
+
+.p-dropdown-panel.comfortable-dropdown-panel .p-dropdown-filter-icon {
+  color: #ff6b52;
+}
+
+.p-dropdown-panel.comfortable-dropdown-panel .p-dropdown-items {
   gap: 0.15rem;
   padding: 0.35rem;
 }
 
-.comfortable-dropdown-panel .p-dropdown-item {
+.p-dropdown-panel.comfortable-dropdown-panel .p-dropdown-items .p-dropdown-item {
   min-height: 2.6rem;
   padding: 0.65rem 0.8rem;
-  border-radius: 5px;
+  color: rgb(243 242 242 / 84%);
+  border-radius: 0;
+  background: transparent;
   line-height: 1.35;
   white-space: normal;
 }
 
-.comfortable-dropdown-panel
-  .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover {
-  background: var(--surface-hover);
+.p-dropdown-panel.comfortable-dropdown-panel
+  .p-dropdown-items .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover {
+  color: #fff;
+  background: rgb(236 48 19 / 10%);
+}
+
+.p-dropdown-panel.comfortable-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  color: #fff;
+  background: rgb(236 48 19 / 20%);
+}
+
+.p-dropdown-panel.comfortable-dropdown-panel .p-dropdown-items .p-dropdown-item.p-focus {
+  outline: 1px solid #ec3013;
+  outline-offset: -1px;
+  background: rgb(236 48 19 / 12%);
+}
+
+.p-dropdown-panel.comfortable-dropdown-panel .p-dropdown-empty-message {
+  color: rgb(243 242 242 / 60%);
+}
+
+.p-dialog.vehicle-dialog .p-dropdown:not(.p-disabled),
+.p-dialog.vehicle-dialog .p-dropdown:not(.p-disabled):hover,
+.p-dialog.vehicle-dialog .p-dropdown:not(.p-disabled).p-focus {
+  border-color: transparent !important;
+  border-radius: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.p-dialog.vehicle-dialog .p-dropdown:not(.p-disabled).p-focus {
+  outline: 0;
+}
+
+.p-dialog.vehicle-dialog .p-dropdown .p-dropdown-label {
+  min-height: 2.5rem;
+  padding: 0.6rem 0;
+  color: #f3f2f2;
+  background: transparent;
+}
+
+.p-dialog.vehicle-dialog .p-dropdown .p-dropdown-trigger {
+  width: 2rem;
+  color: #ff6b52;
+  background: transparent;
+}
+
+.p-dialog.vehicle-dialog .dropdown-with-icon > p-dropdown {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.p-dialog.vehicle-dialog .vehicle-dropdown,
+.p-dialog.vehicle-dialog .vehicle-dropdown.p-dropdown,
+.p-dialog.vehicle-dialog .vehicle-dropdown .p-dropdown {
+  width: 100%;
+  min-height: 2.5rem;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.p-dialog.vehicle-dialog .dropdown-with-icon:focus-within {
+  border-color: #ec3013;
+  box-shadow: 0 0 0 2px rgb(236 48 19 / 20%);
+}
+
+.p-dialog.vehicle-dialog .dropdown-with-icon.input-invalid,
+.p-dialog.vehicle-dialog .dropdown-with-icon.input-invalid:focus-within {
+  border-color: #ff6b52;
+  box-shadow: 0 0 0 2px rgb(255 107 82 / 14%);
 }
 
 @media (max-width: 640px) {
@@ -87,47 +177,136 @@ body {
   }
 }
 
+/* Confirmação de cancelamento de ordens: compacta e com folga no rodapé. */
+.p-dialog.p-confirm-dialog.os-confirm-dialog {
+  width: min(390px, calc(100vw - 2rem));
+  max-width: calc(100vw - 2rem);
+}
+
+.p-dialog.p-confirm-dialog.os-confirm-dialog .p-dialog-footer {
+  box-sizing: border-box;
+  gap: 0.5rem;
+  padding: 0 1rem 1rem;
+}
+
+.p-dialog.p-confirm-dialog.os-confirm-dialog .p-dialog-footer .p-button {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  min-width: 4.5rem;
+}
+
+@media (max-width: 640px) {
+  .p-dialog.p-confirm-dialog.os-confirm-dialog {
+    width: calc(100vw - 2rem);
+  }
+
+  .p-dialog.p-confirm-dialog.os-confirm-dialog .p-dialog-footer .p-button {
+    flex: 0 0 auto;
+  }
+}
+
 /* Confirmações: compactas, legíveis e consistentes em todas as páginas. */
 .p-dialog.p-confirm-dialog {
-  width: 370px;
+  width: 420px;
   max-width: calc(100vw - 2rem);
-  border-radius: 9px;
+  overflow: hidden;
+  border: 1px solid rgb(243 242 242 / 18%);
+  border-top: 2px solid #ec3013;
+  border-radius: 0;
+  background: #201e1d;
+  box-shadow: 0 1.25rem 4rem rgb(0 0 0 / 48%);
 }
 
 .p-dialog.p-confirm-dialog .p-dialog-header {
-  padding: 0.85rem 1.1rem;
+  padding: 0.9rem 1.15rem;
+  color: #f3f2f2;
+  border-bottom: 1px solid rgb(243 242 242 / 13%);
+  background: #201e1d;
+}
+
+.p-dialog.p-confirm-dialog .p-dialog-header .p-dialog-title {
+  color: #f3f2f2;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.p-dialog.p-confirm-dialog .p-dialog-header .p-dialog-header-icon {
+  color: rgb(243 242 242 / 65%);
+  border-radius: 0;
+  background: transparent;
+}
+
+.p-dialog.p-confirm-dialog .p-dialog-header .p-dialog-header-icon:hover {
+  color: #fff;
+  background: rgb(236 48 19 / 12%);
 }
 
 .p-dialog.p-confirm-dialog .p-dialog-content {
+  align-items: center;
   gap: 0.75rem;
-  padding: 0.95rem 1.1rem 1rem;
+  padding: 1.1rem 1.15rem 1.15rem;
+  color: #f3f2f2;
+  background: #201e1d;
 }
 
 .p-dialog.p-confirm-dialog .p-confirm-dialog-icon {
   flex: 0 0 auto;
   margin: 0;
-  font-size: 1.35rem;
+  color: #ff6b52;
+  font-size: 1.25rem;
 }
 
 .p-dialog.p-confirm-dialog .p-confirm-dialog-message {
   margin: 0;
-  font-size: 0.9rem;
+  color: rgb(243 242 242 / 86%);
+  font-size: 0.85rem;
   line-height: 1.45;
 }
 
 .p-dialog.p-confirm-dialog .p-dialog-footer {
   display: flex;
   justify-content: flex-end;
-  gap: 0.6rem;
-  padding: 0 1.1rem 1rem;
+  gap: 0.5rem;
+  padding: 0 1.15rem 1.1rem;
+  border: 0;
+  background: #201e1d;
 }
 
 .p-dialog.p-confirm-dialog .p-dialog-footer .p-button {
-  min-width: 4.25rem;
-  min-height: 2.2rem;
-  padding: 0.5rem 0.8rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
+  min-width: 5rem;
+  min-height: 2.4rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 0;
+  font-size: 0.78rem;
+}
+
+.p-dialog.p-confirm-dialog .p-dialog-footer .p-confirm-dialog-reject {
+  color: rgb(243 242 242 / 80%) !important;
+  border: 1px solid rgb(243 242 242 / 24%) !important;
+  background: transparent !important;
+}
+
+.p-dialog.p-confirm-dialog .p-dialog-footer .p-confirm-dialog-reject:hover:not(:disabled) {
+  color: #fff !important;
+  border-color: #ff6b52 !important;
+  background: rgb(236 48 19 / 10%) !important;
+}
+
+.p-dialog.p-confirm-dialog .p-dialog-footer .p-confirm-dialog-accept {
+  color: #fff !important;
+  border: 1px solid #ec3013 !important;
+  background: #ec3013 !important;
+}
+
+.p-dialog.p-confirm-dialog .p-dialog-footer .p-confirm-dialog-accept:hover:not(:disabled) {
+  border-color: #ff4a2e !important;
+  background: #ff4a2e !important;
+}
+
+.p-dialog.p-confirm-dialog .p-dialog-footer .p-button:focus-visible {
+  outline: 2px solid #ff6b52;
+  outline-offset: 2px;
+  box-shadow: none;
 }
 
 /* Formulário de clientes: diálogo escuro com hierarquia visual da referência. */
@@ -438,6 +617,493 @@ body {
   font-size: 0.72rem;
 }
 
+/* Veículos: página e diálogo seguem os padrões visuais dos cadastros. */
+.veiculos-page {
+  width: min(100%, 1240px);
+  margin-inline: auto;
+  padding: 0.15rem 0 1rem;
+}
+
+.veiculos-page .page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.35rem;
+  border-bottom: 2px solid rgb(243 242 242 / 72%);
+}
+
+.veiculos-page .page-eyebrow {
+  color: #ff6b52;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.veiculos-page .page-header h1 {
+  margin: 0.3rem 0 0;
+  color: #f3f2f2;
+  font-size: clamp(2rem, 4vw, 3.1rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+.veiculos-page .page-header p {
+  margin: 0.5rem 0 0;
+  color: rgb(243 242 242 / 68%);
+  font-size: 0.9rem;
+}
+
+.veiculos-page .page-header > div > p:not(.page-eyebrow) {
+  color: rgb(243 242 242 / 68%);
+}
+
+.veiculos-page .page-header > p-button .p-button {
+  min-height: 2.6rem;
+  padding-inline: 0.95rem;
+  border: 1px solid #ec3013;
+  border-radius: 0;
+  background: #ec3013;
+  color: #fff;
+}
+
+.veiculos-page .page-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 1.1rem;
+  color: rgb(243 242 242 / 48%);
+  font-size: 0.7rem;
+}
+
+.veiculos-page .page-breadcrumb i {
+  color: #ec3013;
+  font-size: 0.62rem;
+}
+
+.veiculos-page .page-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.1rem;
+}
+
+.veiculos-page .search-field {
+  position: relative;
+  display: flex;
+  flex: 0 1 520px;
+  align-items: center;
+  width: 100%;
+}
+
+.veiculos-page .search-field > i {
+  position: absolute;
+  left: 0.85rem;
+  z-index: 1;
+  color: rgb(243 242 242 / 60%);
+  pointer-events: none;
+}
+
+.veiculos-page .search-field input {
+  width: 100%;
+  min-height: 2.65rem;
+  padding: 0.65rem 0.8rem 0.65rem 2.45rem;
+  color: #f3f2f2;
+  border: 1px solid rgb(243 242 242 / 22%);
+  border-radius: 0;
+  background: rgb(21 19 18 / 76%);
+}
+
+.veiculos-page .search-field input::placeholder {
+  color: rgb(243 242 242 / 46%);
+}
+
+.veiculos-page .search-field input:enabled:focus {
+  border-color: #ec3013;
+  box-shadow: 0 0 0 2px rgb(236 48 19 / 20%);
+}
+
+.veiculos-page .toolbar-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.veiculos-page .result-count {
+  color: rgb(243 242 242 / 65%);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.veiculos-page .result-count strong {
+  margin-right: 0.25rem;
+  color: #f3f2f2;
+  font-variant-numeric: tabular-nums;
+}
+
+.veiculos-page .toolbar-meta .p-button {
+  width: 2.35rem;
+  height: 2.35rem;
+  color: rgb(243 242 242 / 72%);
+  border-radius: 0;
+}
+
+.veiculos-page .toolbar-meta .p-button:hover:not(:disabled) {
+  color: #fff;
+  background: rgb(236 48 19 / 14%);
+}
+
+.veiculos-page .table-card {
+  overflow: hidden;
+  border: 1px solid rgb(243 242 242 / 20%);
+  border-top: 2px solid #ec3013;
+  background: rgb(243 242 242 / 3.5%);
+  backdrop-filter: blur(12px);
+}
+
+.veiculos-page .list-heading {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.8rem 1rem;
+  color: rgb(243 242 242 / 62%);
+  border-bottom: 1px solid rgb(243 242 242 / 15%);
+  background: rgb(0 0 0 / 18%);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.veiculos-page .list-heading span + span {
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.veiculos-page .p-datatable.vehicles-table,
+.veiculos-page .p-datatable.vehicles-table .p-datatable-wrapper {
+  color: #f3f2f2;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.veiculos-page .p-datatable.vehicles-table .p-datatable-thead > tr > th {
+  padding: 0.85rem 1rem;
+  color: rgb(243 242 242 / 62%);
+  border: 0;
+  border-bottom: 1px solid rgb(243 242 242 / 19%);
+  background: transparent;
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.veiculos-page .p-datatable.vehicles-table .p-datatable-tbody > tr {
+  color: #f3f2f2;
+  background: transparent;
+}
+
+.veiculos-page .p-datatable.vehicles-table .p-datatable-tbody > tr:hover {
+  background: rgb(236 48 19 / 5.5%);
+}
+
+.veiculos-page .p-datatable.vehicles-table .p-datatable-tbody > tr > td {
+  padding: 0.85rem 1rem;
+  border: 0;
+  border-bottom: 1px solid rgb(243 242 242 / 12%);
+  font-size: 0.8rem;
+}
+
+.veiculos-page .actions-column {
+  width: 112px;
+  text-align: right;
+}
+
+.veiculos-page .vehicle-identity,
+.veiculos-page .vehicle-owner {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.veiculos-page .vehicle-avatar {
+  display: grid;
+  width: 2.35rem;
+  height: 2.35rem;
+  flex: 0 0 auto;
+  place-items: center;
+  color: #ff6b52;
+  border-left: 2px solid #ec3013;
+  background: rgb(243 242 242 / 7%);
+}
+
+.veiculos-page .vehicle-avatar i {
+  font-size: 0.95rem;
+}
+
+.veiculos-page .vehicle-identity strong {
+  display: block;
+  color: #f3f2f2;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.veiculos-page .vehicle-identity small {
+  display: block;
+  margin-top: 0.25rem;
+  color: rgb(243 242 242 / 54%);
+  font-size: 0.68rem;
+}
+
+.veiculos-page .vehicle-plate {
+  display: inline-block;
+  padding: 0.38rem 0.55rem;
+  color: #f3f2f2;
+  border: 1px solid rgb(243 242 242 / 18%);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.veiculos-page .owner-initials {
+  display: grid;
+  width: 1.9rem;
+  height: 1.9rem;
+  flex: 0 0 auto;
+  place-items: center;
+  color: #ff6b52;
+  background: rgb(236 48 19 / 12%);
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+
+.veiculos-page .acoes {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.25rem;
+}
+
+.veiculos-page .acoes .p-button {
+  width: 2.25rem;
+  height: 2.25rem;
+  color: #f3f2f2;
+  border-radius: 0;
+}
+
+.veiculos-page .acoes .p-button:hover {
+  color: #fff;
+  background: rgb(236 48 19 / 16%);
+}
+
+.veiculos-page .acoes .p-button.p-button-danger {
+  color: #ff7965;
+}
+
+.veiculos-page .empty-state {
+  padding: 2.5rem 1rem !important;
+  color: rgb(243 242 242 / 65%);
+  text-align: center;
+}
+
+.veiculos-page .empty-state i,
+.veiculos-page .empty-state strong,
+.veiculos-page .empty-state span {
+  display: block;
+}
+
+.veiculos-page .empty-state i {
+  margin-bottom: 0.65rem;
+  color: #ff6b52;
+  font-size: 1.2rem;
+}
+
+.veiculos-page .empty-state strong {
+  margin-bottom: 0.3rem;
+  color: #f3f2f2;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.veiculos-page .empty-state span {
+  font-size: 0.74rem;
+}
+
+.p-datatable.vehicles-table .p-paginator {
+  justify-content: space-between;
+  gap: 0.2rem;
+  padding: 0.45rem;
+  color: rgb(243 242 242 / 70%);
+  border: 0;
+  border-top: 1px solid rgb(243 242 242 / 15%);
+  border-radius: 0;
+  background: #1d1b1a;
+}
+
+.p-datatable.vehicles-table .p-paginator-left-content {
+  color: rgb(243 242 242 / 58%);
+  font-size: 0.7rem;
+  white-space: nowrap;
+}
+
+.p-datatable.vehicles-table .p-paginator .p-paginator-element {
+  min-width: 2.5rem;
+  height: 2.5rem;
+  margin: 0;
+  color: rgb(243 242 242 / 68%);
+  border: 1px solid transparent;
+  border-radius: 0;
+  background: transparent;
+}
+
+.p-datatable.vehicles-table .p-paginator .p-paginator-element:not(.p-disabled):not(.p-highlight):hover {
+  color: #fff;
+  border-color: rgb(243 242 242 / 18%);
+  background: rgb(236 48 19 / 12%);
+}
+
+.p-datatable.vehicles-table .p-paginator .p-paginator-page.p-highlight {
+  color: #fff;
+  border-color: #ec3013;
+  background: #ec3013;
+}
+
+.p-datatable.vehicles-table .p-paginator .p-disabled {
+  opacity: 0.4;
+}
+
+.p-dialog.vehicle-dialog .form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1rem;
+}
+
+.p-dialog.vehicle-dialog .field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.p-dialog.vehicle-dialog .field--full {
+  grid-column: 1 / -1;
+}
+
+.p-dialog.vehicle-dialog .field label {
+  color: rgb(243 242 242 / 82%);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.p-dialog.vehicle-dialog .field label > span {
+  color: #ff6b52;
+}
+
+.p-dialog.vehicle-dialog .field-help,
+.p-dialog.vehicle-dialog .field-error {
+  font-size: 0.68rem;
+  line-height: 1.45;
+}
+
+.p-dialog.vehicle-dialog .field-help {
+  color: rgb(243 242 242 / 55%);
+}
+
+.p-dialog.vehicle-dialog .field-error {
+  color: #ff7965;
+}
+
+.p-dialog.vehicle-dialog .field input[aria-invalid='true'] {
+  border-color: #ff6b52;
+}
+
+.p-dialog.vehicle-dialog .field .p-dropdown[aria-invalid='true'] {
+  border-color: #ff6b52;
+}
+
+.p-dialog.client-dialog .dialog-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.p-dialog.client-dialog .dialog-actions .p-button {
+  min-height: 2.5rem;
+  border-radius: 0;
+}
+
+.p-dialog.client-dialog .dialog-actions .p-button:not(.cancel-button) {
+  border-color: #ec3013;
+  background: #ec3013;
+}
+
+.p-dialog.client-dialog .dialog-actions .p-button:not(.cancel-button):hover {
+  border-color: #ff4a2e;
+  background: #ff4a2e;
+}
+
+.p-dialog.client-dialog .dialog-actions .p-button.cancel-button {
+  min-width: 7.5rem;
+  color: rgb(243 242 242 / 76%);
+  border-color: rgb(243 242 242 / 24%);
+  background: transparent;
+}
+
+.p-dialog.client-dialog .dialog-actions .p-button.cancel-button:hover:not(:disabled) {
+  color: #fff;
+  border-color: #ff6b52;
+  background: rgb(236 48 19 / 10%);
+}
+
+@media (max-width: 640px) {
+  .veiculos-page .page-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .veiculos-page .page-header > p-button .p-button {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .veiculos-page .page-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .veiculos-page .search-field {
+    flex-basis: auto;
+  }
+
+  .veiculos-page .toolbar-meta {
+    justify-content: space-between;
+  }
+
+  .veiculos-page .p-datatable .p-datatable-tbody > tr > td {
+    white-space: nowrap;
+  }
+
+  .p-dialog.vehicle-dialog .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .p-dialog.vehicle-dialog .field--full {
+    grid-column: auto;
+  }
+
+  .p-dialog.client-dialog .dialog-actions .p-button {
+    flex: 1;
+  }
+}
+
 @media (max-width: 640px) {
   .p-dialog.p-confirm-dialog {
     width: calc(100vw - 2rem);
@@ -454,5 +1120,365 @@ body {
   .clientes-page .cliente-contato {
     flex-direction: column;
     gap: 0.35rem;
+  }
+}
+
+/* Ordens de serviço: identidade visual alinhada à listagem de veículos. */
+.ordens-page {
+  width: min(100%, 1240px);
+  margin-inline: auto;
+  padding: 0.15rem 0 1rem;
+}
+.ordens-page .page-header {
+  align-items: flex-end;
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.35rem;
+  border-bottom: 2px solid rgb(243 242 242 / 72%);
+}
+.ordens-page .page-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 1.1rem;
+  color: rgb(243 242 242 / 48%);
+  font-size: 0.7rem;
+}
+.ordens-page .page-breadcrumb i {
+  color: #ec3013;
+  font-size: 0.62rem;
+}
+.ordens-page .page-eyebrow {
+  color: #ff6b52;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+}
+.ordens-page .page-header h1 {
+  color: #f3f2f2;
+  font-size: clamp(2rem, 4vw, 3.1rem);
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+.ordens-page .page-header p {
+  margin-top: 0.5rem;
+  color: rgb(243 242 242 / 68%);
+  font-size: 0.9rem;
+}
+.ordens-page .page-header > p-button .p-button {
+  min-height: 2.6rem;
+  padding-inline: 0.95rem;
+  border: 1px solid #ec3013;
+  border-radius: 0;
+  background: #ec3013;
+  color: #fff;
+}
+.ordens-page .page-toolbar {
+  margin-bottom: 1.1rem;
+}
+.ordens-page .search-field {
+  flex: 0 1 520px;
+}
+.ordens-page .search-field input {
+  min-height: 2.65rem;
+  padding: 0.65rem 0.8rem 0.65rem 2.45rem;
+  color: #f3f2f2;
+  border: 1px solid rgb(243 242 242 / 22%);
+  border-radius: 0;
+  background: rgb(21 19 18 / 76%);
+}
+.ordens-page .search-field input::placeholder {
+  color: rgb(243 242 242 / 46%);
+}
+.ordens-page .toolbar-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.ordens-page .result-count {
+  color: rgb(243 242 242 / 65%);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+.ordens-page .result-count strong {
+  margin-right: 0.25rem;
+  color: #f3f2f2;
+  font-variant-numeric: tabular-nums;
+}
+.ordens-page .toolbar-meta .p-button {
+  width: 2.35rem;
+  height: 2.35rem;
+  color: rgb(243 242 242 / 72%);
+  border-radius: 0;
+}
+.ordens-page .toolbar-meta .p-button:hover {
+  color: #fff;
+  background: rgb(236 48 19 / 14%);
+}
+.ordens-page .table-card {
+  border: 1px solid rgb(243 242 242 / 20%);
+  border-top: 2px solid #ec3013;
+  border-radius: 0;
+  background: rgb(243 242 242 / 3.5%);
+  backdrop-filter: blur(12px);
+}
+.ordens-page .list-heading {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.8rem 1rem;
+  color: rgb(243 242 242 / 62%);
+  border-bottom: 1px solid rgb(243 242 242 / 15%);
+  background: rgb(0 0 0 / 18%);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.ordens-page .list-heading span + span {
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+}
+.ordens-page .p-datatable.orders-table,
+.ordens-page .p-datatable.orders-table .p-datatable-wrapper {
+  color: #f3f2f2;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.ordens-page .p-datatable.orders-table .p-datatable-thead > tr > th {
+  padding: 0.85rem 1rem;
+  color: rgb(243 242 242 / 62%);
+  border: 0;
+  border-bottom: 1px solid rgb(243 242 242 / 19%);
+  background: transparent;
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.ordens-page .p-datatable.orders-table .p-datatable-tbody > tr {
+  color: #f3f2f2;
+  background: transparent;
+}
+.ordens-page .p-datatable.orders-table .p-datatable-tbody > tr:hover {
+  background: rgb(236 48 19 / 5.5%);
+}
+.ordens-page .p-datatable.orders-table .p-datatable-tbody > tr > td {
+  padding: 0.85rem 1rem;
+  border: 0;
+  border-bottom: 1px solid rgb(243 242 242 / 12%);
+  font-size: 0.8rem;
+}
+.ordens-page .order-identity,
+.ordens-page .order-owner,
+.ordens-page .order-vehicle {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.ordens-page .order-number {
+  color: #ff6b52;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+.ordens-page .order-identity .p-button,
+.ordens-page .acoes .p-button {
+  width: 2.25rem;
+  height: 2.25rem;
+  color: #f3f2f2;
+  border-radius: 0;
+}
+.ordens-page .order-identity .p-button:hover,
+.ordens-page .acoes .p-button:hover {
+  color: #fff;
+  background: rgb(236 48 19 / 16%);
+}
+.ordens-page .acoes {
+  justify-content: flex-end;
+  gap: 0.25rem;
+}
+.ordens-page .acoes .p-button.p-button-danger {
+  color: #ff7965;
+}
+.ordens-page .actions-column {
+  width: 112px;
+  text-align: right;
+}
+.ordens-page .vehicle-avatar {
+  display: grid;
+  width: 2.35rem;
+  height: 2.35rem;
+  flex: 0 0 auto;
+  place-items: center;
+  color: #ff6b52;
+  border-left: 2px solid #ec3013;
+  background: rgb(243 242 242 / 7%);
+}
+.ordens-page .vehicle-avatar i {
+  font-size: 0.95rem;
+}
+.ordens-page .order-vehicle strong,
+.ordens-page .order-vehicle small {
+  display: block;
+}
+.ordens-page .order-vehicle strong {
+  color: #f3f2f2;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.ordens-page .order-vehicle small {
+  margin-top: 0.25rem;
+  color: rgb(243 242 242 / 54%);
+  font-size: 0.68rem;
+}
+.ordens-page .owner-initials {
+  display: grid;
+  width: 1.9rem;
+  height: 1.9rem;
+  flex: 0 0 auto;
+  place-items: center;
+  color: #ff6b52;
+  background: rgb(236 48 19 / 12%);
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+.ordens-page .p-datatable.orders-table .p-paginator {
+  justify-content: space-between;
+  gap: 0.2rem;
+  padding: 0.45rem;
+  color: rgb(243 242 242 / 70%);
+  border: 0;
+  border-top: 1px solid rgb(243 242 242 / 15%);
+  border-radius: 0;
+  background: #1d1b1a;
+}
+.ordens-page .p-datatable.orders-table .p-paginator-left-content {
+  color: rgb(243 242 242 / 58%);
+  font-size: 0.7rem;
+  white-space: nowrap;
+}
+.ordens-page .empty-state {
+  padding: 2.5rem 1rem !important;
+  color: rgb(243 242 242 / 65%);
+  text-align: center;
+}
+.ordens-page .empty-state i,
+.ordens-page .empty-state strong,
+.ordens-page .empty-state span {
+  display: block;
+}
+.ordens-page .empty-state i {
+  margin-bottom: 0.65rem;
+  color: #ff6b52;
+  font-size: 1.2rem;
+}
+.ordens-page .empty-state strong {
+  margin-bottom: 0.3rem;
+  color: #f3f2f2;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+.ordens-page .empty-state span {
+  font-size: 0.74rem;
+}
+.ordens-page .paginator-total {
+  color: rgb(243 242 242 / 58%);
+  font-size: 0.7rem;
+}
+.ordens-page .detalhe-status-valor {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.ordens-page .detalhe-status-valor .campo-valor {
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.ordens-page .p-datatable.orders-table .p-datatable-thead > tr > th:first-child,
+.ordens-page .p-datatable.orders-table .p-datatable-tbody > tr > td:first-child {
+  width: 140px;
+}
+.p-dialog.order-dialog .order-form-content .form-grid {
+  padding: 0;
+}
+.p-dialog.order-dialog .field-help {
+  color: rgb(243 242 242 / 55%);
+  font-size: 0.68rem;
+  line-height: 1.45;
+}
+.p-dialog.order-dialog .field label > span {
+  color: #ff6b52;
+}
+.p-dialog.order-dialog .textarea-with-icon {
+  align-items: flex-start;
+  padding-top: 0.7rem;
+}
+.p-dialog.order-dialog .textarea-with-icon > i {
+  margin-top: 0.15rem;
+}
+.p-dialog.order-dialog .textarea-with-icon textarea[pInputTextarea] {
+  width: 100%;
+  min-width: 0;
+  min-height: 6rem;
+  padding: 0 0 0.65rem;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  background: transparent;
+  box-shadow: none;
+  resize: vertical;
+}
+.p-dialog.order-dialog .textarea-with-icon:focus-within {
+  border-color: #ec3013;
+  box-shadow: 0 0 0 2px rgb(236 48 19 / 20%);
+}
+.p-dialog.order-dialog .number-with-icon > p-inputnumber,
+.p-dialog.order-dialog .number-with-icon .p-inputnumber {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+.p-dialog.order-dialog .number-with-icon .p-inputnumber-input {
+  width: 100%;
+  min-height: 2.5rem;
+  padding: 0.6rem 0;
+  color: #f3f2f2;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.p-dialog.order-dialog .number-with-icon:focus-within {
+  border-color: #ec3013;
+  box-shadow: 0 0 0 2px rgb(236 48 19 / 20%);
+}
+@media (max-width: 640px) {
+  .ordens-page .page-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .ordens-page .page-header > p-button .p-button {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .ordens-page .page-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .ordens-page .search-field {
+    flex-basis: auto;
+  }
+  .ordens-page .toolbar-meta {
+    justify-content: space-between;
+  }
+  .ordens-page .detalhe-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .ordens-page .detalhe-status-valor {
+    width: 100%;
+    justify-content: space-between;
   }
 }
